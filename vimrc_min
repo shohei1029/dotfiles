@@ -8,5 +8,6 @@ set noswapfile
 set number
 set showmode
 set title
+set showmatch " 閉じ括弧入力時に対応する括弧の強調
 syntax on
 imap jj <esc>
