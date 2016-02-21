@@ -6,30 +6,30 @@ git clone https://github.com/rickhanlonii/Solarized-Darcula/
 ### zsh
 
 #### prezto
-// Zsh$B5/F0(B
+// Zsh起動
 $ zsh
  
-// $B%j%]%8%H%j$r(Bclone
+// リポジトリをclone
 $ git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
  
-// $B4{B8$N@_Dj%U%!%$%k$rB`Hr(B($BI,MW$J>l9g(B)
+// 既存の設定ファイルを退避(必要な場合)
 $ mkdir zsh_orig && mv zshmv .zlogin .zlogout .zprofile .zshenv .zshrc zsh_orig
  
-// $B@_Dj%U%!%$%k$r:n@.(B
+// 設定ファイルを作成
 $ setopt EXTENDED_GLOB
 for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
   ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
 done
  
-// Shell$B$N%G%U%)%k%H$K@_Dj(B
+// Shellのデフォルトに設定
 $ chsh -s /bin/zsh
 
 //Updating
 git pull && git submodule update --init --recursive
 
-#####powerline$BBP1~$N(BRicty$BMxMQ=`Hw(B
+#####powerline対応のRicty利用準備
 $ brew tap sanemat/font
 $ brew reinstall --powerline --vim-powerline ricty
 $ cp -f /usr/local/Cellar/ricty/3.2.4/share/fonts/Ricty*.ttf ~/Library/Fonts/
 $ fc-cache -vf
- Ricty$B$r;XDj(B
+ Rictyを指定
