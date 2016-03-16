@@ -1,0 +1,24 @@
+[[plugins]]
+repo = 'Shougo/dein.vim'
+
+#[[plugins]]
+#repo = 'Shougo/vimproc'
+#
+#  [plugins.build]
+#  windows = 'tools\\update-dll-mingw'
+#  cygwin  = 'make -f make_cygwin.mak'
+#  mac     = 'make -f make_mac.mak'
+#  linux   = 'make'
+#  unix    = 'gmake'
+
+#[[plugins]]
+#repo = 'vim-airline/vim-airline'
+#[[plugins]]
+#repo = 'vim-airline/vim-airline-themes'
+
+
+#color scheme
+[[plugins]]
+repo = 'freeo/vim-kalisi'
+[[plugins]]
+repo = 'mhartington/oceanic-next'
