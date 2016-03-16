@@ -9,12 +9,11 @@ set number
 set showmode
 set title
 set showmatch " 閉じ括弧入力時に対応する括弧の強調
+set clipboard+=unnamed
 syntax on
 imap jj <esc>
 
-if has('nvim')
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  endif
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 "Python3 support
 let g:python3_host_prog = expand('$HOME') . '/.pyenv/shims/python'

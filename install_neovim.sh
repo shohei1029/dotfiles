@@ -14,8 +14,8 @@ elif [ `uname` = "Linux" ]; then
     sudo apt-get -y install python-dev python-pip python3-dev python3-pip
 fi
 
-echo 'export XDG_CONFIG_HOME="~/.config"' >> .zshenv
-echo 'export XDG_CONFIG_HOME="~/.config"' >> .bash_profile
+echo 'export XDG_CONFIG_HOME="~/.config"' >> ~/.zshenv
+echo 'export XDG_CONFIG_HOME="~/.config"' >> ~/.bash_profile
 
 mkdir -p ~/.config
 cp -r ./nvim ~/.config
