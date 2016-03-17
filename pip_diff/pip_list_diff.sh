@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 
 pip list > pip_new.txt
@@ -10,5 +10,5 @@ pip list > "$DIR"/pip_old.txt
 cut -f 1 -d " " < "$DIR"/pip_old.txt | sort > "$DIR"/pip_old2.txt
 
 cd "$DIR"
-diff pip_old2.txt pip_new2.txt
+diff pip_old2.txt pip_new2.txt | sort | grep -e '>' -e '<'
 
