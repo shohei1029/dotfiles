@@ -17,6 +17,7 @@ alias tarall='find ./ -type f -name "*.tar.gz" -exec tar zxf {} \;'
 alias ipynb='ipython notebook'
 alias ipnb='ipynb'
 alias jpnb='jupyter notebook'
+alias nv='nvim'
 
 #export EDITOR='vim'
 
@@ -58,6 +59,10 @@ case ${UID} in
 		;;
 esac
 
+#nvim
+export XDG_CONFIG_HOME=~/.config
+
+#export PYTHONPATH="$HOME/.pyenv/shims/python3:$PYTHONPATH"
 
 # Default shell configuration
 #
