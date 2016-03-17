@@ -4,6 +4,7 @@ set -euo pipefail
 
 
 if [ `uname` = "Darwin" ]; then
+    brew update
     brew tap neovim/neovim
     brew install --HEAD neovim
 elif [ `uname` = "Linux" ]; then
