@@ -1,0 +1,98 @@
+alias ls='ls -GF'
+alias la='ls -la'
+alias f='ls -F'
+alias l='ls -l'
+alias a='ls -a'
+alias lh='ls -lh'
+alias sfcx='ssh t14650sn@ccx01.sfc.keio.ac.jp'
+alias sfcz='ssh t14650sn@ccz00.sfc.keio.ac.jp'
+alias sfcw='ssh t14650sn@webedit.sfc.keio.ac.jp'
+alias smith1='ssh smith1'
+alias smith2='ssh smith2'
+alias smith3='ssh smith3'
+alias smith4='ssh smith4'
+alias smith5='ssh smith5'
+alias iris='ssh iris'
+alias tarall='find ./ -type f -name "*.tar.gz" -exec tar zxf {} \;'
+alias ipynb='ipython notebook'
+alias ipnb='ipynb'
+alias jpnb='jupyter notebook'
+alias nv='nvim'
+
+
+
+case "${OSTYPE}" in 
+darwin*)
+	alias ls='ls -G'
+	alias ll='ls -lG'
+	alias la='ls -laG'
+	;;
+linux*)
+	alias ls='ls --color'
+	alias ll='ls -l --color'
+	alias la='ls -la --color'
+	;;
+esac
+
+# LANG
+#
+export LANG=ja_JP.UTF-8
+case ${UID} in
+	0)
+		LANG=C
+		;;
+esac
+
+
+
+
+# zplug
+export ZPLUG_HOME=/usr/local/opt/zplug
+source $ZPLUG_HOME/init.zsh
+
+## plugins
+zplug "sorin-ionescu/prezto"
+#zplug "zsh-users/zsh-syntax-highlighting", nice:10
+#zplug "zsh-users/zsh-completions"
+zplug "mollifier/anyframe"
+zplug "peco/peco", as:command, from:gh-r #functionaly same as fzf
+#zplug "junegunn/fzf-bin", as:command, rename-to:"fzf", from:gh-r
+zplug "b4b4r07/enhancd", use:init.sh
+##
+
+# Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+# Then, source plugins and add commands to $PATH
+zplug load --verbose
+
+
+
+# other settings
+
+# nvim
+export XDG_CONFIG_HOME=~/.config
+## load user .zshrc configuration file
+##
+[ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
+
+## Command history configuration
+HISTFILE=~/.zsh_history
+HISTSIZE=20000
+SAVEHIST=20000
+setopt hist_ignore_dups     # ignore duplication command history list
+setopt share_history        # share command history data
+
+# history search with peco
+peco-select-history() {
+    BUFFER=$(history 1 | sort -k1,1nr | perl -ne 'BEGIN { my @lines = (); } s/^\s*\d+\*?\s*//; $in=$_; if (!(grep {$in eq $_} @lines)) { push(@lines, $in); print $in; }' | peco --query "$LBUFFER")
+    CURSOR=${#BUFFER}
+    zle reset-prompt
+}
+zle -N peco-select-history
+bindkey '^r' peco-select-history
