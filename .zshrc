@@ -44,14 +44,22 @@ case ${UID} in
 esac
 
 
-
-
 # zplug
 export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
 ## plugins
+### prezto modules
+zplug "modules/environment", from:prezto #Sets general shell options and defines environment variables.
+zplug "modules/history", from:prezto #Sets history options and defines history aliases.
+zplug "modules/directory", from:prezto #Sets directory options and defines directory aliases.
+zplug "modules/spectrum", from:prezto #Provides for easier use of 256 colors and effects.
+#zplug "modules/utility", from:prezto #Defines general aliases and functions.
+zplug "modules/completion", from:prezto #Loads and configures tab completion and provides additional completions from the zsh-completions project.
+zplug "modules/git", from:prezto
+zplug "modules/prompt", from:prezto
 #zplug "sorin-ionescu/prezto" #don't use this because now we have from:prezto
+
 zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-syntax-highlighting", nice:10
 #zplug "zsh-users/zsh-completions" # use prezo version
@@ -59,16 +67,6 @@ zplug "mollifier/anyframe"
 zplug "peco/peco", as:command, from:gh-r #functionaly same as fzf
 #zplug "junegunn/fzf-bin", as:command, rename-to:"fzf", from:gh-r
 zplug "b4b4r07/enhancd", use:init.sh
-### prezto modules
-zplug "modules/environment", from:prezto #Sets general shell options and defines environment variables.
-zplug "modules/history", from:prezto #Sets history options and defines history aliases.
-zplug "modules/directory", from:prezto #Sets directory options and defines directory aliases.
-zplug "modules/spectrum", from:prezto #Provides for easier use of 256 colors and effects.
-zplug "modules/utility", from:prezto #Defines general aliases and functions.
-zplug "modules/completion", from:prezto #Loads and configures tab completion and provides additional completions from the zsh-completions project.
-zplug "modules/git", from:prezto
-zplug "modules/prompt", from:prezto
-
 ##
 
 # Install plugins if there are plugins that have not been installed
@@ -80,8 +78,8 @@ if ! zplug check --verbose; then
 fi
 
 # Then, source plugins and add commands to $PATH
-zplug load 
-#zplug load --verbose
+#zplug load 
+zplug load --verbose
 
 #use prompt from prezto
 promptinit
@@ -95,12 +93,12 @@ export XDG_CONFIG_HOME=~/.config
 ##
 [ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
 
-## Command history configuration
+### Command history configuration
 HISTFILE=~/.zsh_history
 HISTSIZE=20000
 SAVEHIST=20000
-setopt hist_ignore_dups     # ignore duplication command history list
-setopt share_history        # share command history data
+#setopt hist_ignore_dups     # ignore duplication command history list
+#setopt share_history        # share command history data
 
 # history search with peco
 peco-select-history() {
@@ -114,5 +112,5 @@ bindkey '^r' peco-select-history
 #anyframe
 alias af=anyframe-widget-select-widget
 
-#enhanced
+#enhancd
 ENHANCD_DISABLE_HOME=1
