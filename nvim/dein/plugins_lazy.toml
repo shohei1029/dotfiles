@@ -2,3 +2,15 @@
 repo = 'Shougo/deoplete.nvim'
 if = 'has("nvim")'
 on_i = 1
+
+[[plugins]]
+repo = 'ervandew/supertab'
+on_i = 1
+
+[[plugins]]
+repo = 'davidhalter/jedi-vim'
+on_ft = ['python','python3']
+
+#[[plugins]]
+#repo = 'andviro/flake8-vim'
+#on_ft = ['python','python3']

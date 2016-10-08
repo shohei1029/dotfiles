@@ -11,6 +11,7 @@ repo = 'Shougo/dein.vim'
 #  linux   = 'make'
 #  unix    = 'gmake'
 
+
 #[[plugins]]
 #repo = 'vim-airline/vim-airline'
 #[[plugins]]
@@ -18,7 +19,9 @@ repo = 'Shougo/dein.vim'
 
 
 #color scheme
+#[[plugins]]
+#repo = 'freeo/vim-kalisi'
+#[[plugins]]
+#repo = 'mhartington/oceanic-next'
 [[plugins]]
-repo = 'freeo/vim-kalisi'
-[[plugins]]
-repo = 'mhartington/oceanic-next'
+repo = 'w0ng/vim-hybrid'
