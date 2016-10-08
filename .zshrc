@@ -60,8 +60,8 @@ zplug "modules/git", from:prezto
 zplug "modules/prompt", from:prezto
 #zplug "sorin-ionescu/prezto" #don't use this because now we have from:prezto
 
+zplug "zsh-users/zsh-syntax-highlighting", nice:10 #load this before load zsh-history-substring-search
 zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zsh-syntax-highlighting", nice:10
 #zplug "zsh-users/zsh-completions" # use prezo version
 zplug "mollifier/anyframe"
 zplug "peco/peco", as:command, from:gh-r #functionaly same as fzf
@@ -78,8 +78,8 @@ if ! zplug check --verbose; then
 fi
 
 # Then, source plugins and add commands to $PATH
-#zplug load 
-zplug load --verbose
+zplug load 
+#zplug load --verbose
 
 #use prompt from prezto
 promptinit
@@ -93,10 +93,10 @@ export XDG_CONFIG_HOME=~/.config
 ##
 [ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
 
-### Command history configuration
+### Command history configuration (overwrite a part of prezto:history module settings)
 HISTFILE=~/.zsh_history
-HISTSIZE=20000
-SAVEHIST=20000
+HISTSIZE=10000
+SAVEHIST=1000000
 #setopt hist_ignore_dups     # ignore duplication command history list
 #setopt share_history        # share command history data
 
@@ -108,6 +108,10 @@ peco-select-history() {
 }
 zle -N peco-select-history
 bindkey '^r' peco-select-history
+
+#history-substring-search-
+bindkey -M emacs '^P' history-substring-search-up
+bindkey -M emacs '^N' history-substring-search-down
 
 #anyframe
 alias af=anyframe-widget-select-widget
