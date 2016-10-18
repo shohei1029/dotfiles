@@ -13,13 +13,11 @@ alias smith3='ssh smith3'
 alias smith4='ssh smith4'
 alias smith5='ssh smith5'
 alias iris='ssh iris'
-alias tarall='find ./ -type f -name "*.tar.gz" -exec tar zxf {} \;'
 alias ipynb='ipython notebook'
 alias ipnb='ipynb'
 alias jpnb='jupyter notebook'
 alias nv='nvim'
 
-autoload -Uz promptinit
 
 case "${OSTYPE}" in 
 darwin*)
@@ -82,6 +80,7 @@ zplug load
 #zplug load --verbose
 
 #use prompt from prezto
+autoload -Uz promptinit
 promptinit
 prompt paradox
 
