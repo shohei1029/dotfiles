@@ -43,8 +43,10 @@ esac
 
 
 # zplug
-export ZPLUG_HOME=/usr/local/opt/zplug
-source $ZPLUG_HOME/init.zsh
+#export ZPLUG_HOME=/usr/local/opt/zplug
+#source $ZPLUG_HOME/init.zsh
+[ -f /usr/local/opt/zplug/init.zsh ] && source /usr/local/opt/zplug/init.zsh
+[ -f ~/.zplug/init.zsh ] && source ~/.zplug/init.zsh
 
 ## plugins
 ### prezto modules
