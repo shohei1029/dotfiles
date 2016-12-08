@@ -49,6 +49,7 @@ esac
 [ -f ~/.zplug/init.zsh ] && source ~/.zplug/init.zsh
 
 ## plugins
+zplug "zplug/zplug"
 ### prezto modules
 zplug "modules/environment", from:prezto #Sets general shell options and defines environment variables.
 zplug "modules/history", from:prezto #Sets history options and defines history aliases.
@@ -65,7 +66,7 @@ zplug "zsh-users/zsh-history-substring-search"
 #zplug "zsh-users/zsh-completions" # use prezo version
 zplug "mollifier/anyframe"
 zplug "peco/peco", as:command, from:gh-r #functionaly same as fzf
-#zplug "junegunn/fzf-bin", as:command, rename-to:"fzf", from:gh-r
+zplug "junegunn/fzf-bin", as:command, rename-to:"fzf", from:gh-r
 zplug "b4b4r07/enhancd", use:init.sh
 ##
 
@@ -119,3 +120,39 @@ alias af=anyframe-widget-select-widget
 
 #enhancd
 ENHANCD_DISABLE_HOME=1
+ENHANCD_FILTER=fzf:peco
+
+# fzf
+# fh - repeat history
+# functionaly same with above script. tmp
+fh() {
+  print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
+}
+
+# c - browse chrome history
+#c() {
+ch() {
+  local cols sep
+  cols=$(( COLUMNS / 3 ))
+  sep='{{::}}'
+
+  # Copy History DB to circumvent the lock
+  # - See http://stackoverflow.com/questions/8936878 for the file path
+  cp -f ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
+
+  sqlite3 -separator $sep /tmp/h \
+    "select substr(title, 1, $cols), url
+     from urls order by last_visit_time desc" |
+  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\n", $1, $2}' |
+  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs open
+}
+
+# fkill - kill process
+fkill() {
+  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+
+  if [ "x$pid" != "x" ]
+  then
+    kill -${1:-9} $pid
+  fi
+}
