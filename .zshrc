@@ -61,9 +61,10 @@ zplug "modules/git", from:prezto
 zplug "modules/prompt", from:prezto
 #zplug "sorin-ionescu/prezto" #don't use this because now we have from:prezto
 
-zplug "zsh-users/zsh-syntax-highlighting", nice:10 #load this before load zsh-history-substring-search
+zplug "zsh-users/zsh-syntax-highlighting", defer:2 #load this before load zsh-history-substring-search
 zplug "zsh-users/zsh-history-substring-search"
 #zplug "zsh-users/zsh-completions" # use prezo version
+zplug "felixr/docker-zsh-completion"
 zplug "mollifier/anyframe"
 zplug "peco/peco", as:command, from:gh-r #functionaly same as fzf
 zplug "junegunn/fzf-bin", as:command, rename-to:"fzf", from:gh-r
