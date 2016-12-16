@@ -19,7 +19,7 @@ set hlsearch "検索文字の強調表示
 set scrolloff=8 " 左右スクロール時の視界を確保
 
 
-"keymappings --
+"keymapngs --
 imap jj <esc>
 " ESCを二回押すことでハイライトを消す
 nmap <silent> <Esc><Esc> :nohlsearch<CR>
@@ -32,7 +32,6 @@ inoremap <c-j> <down>
 inoremap <c-k> <up>
 inoremap <c-h> <left>
 inoremap <c-l> <right>
-
 
 
 syntax on
@@ -60,7 +59,6 @@ endif
 execute 'set runtimepath^=' . s:dein_repo_dir
 
 
-
 if dein#load_state(s:dein_dir)
   call dein#begin(s:dein_dir)
 
@@ -86,23 +84,38 @@ endif
 
 
 " other settings ---
-" Use deoplete.
-let g:deoplete#enable_at_startup = 1
 
-"let g:airline_powerline_fonts = 1
-
+" vim theme
 set background=dark
 "colorscheme kalisi
 "colorscheme OceanicNext
 colorscheme hybrid
 
-"" deoplete tab-complete
-"inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
-"" ,<Tab> for regular tab
-"inoremap <Leader><Tab> <Tab>
+" Use deoplete.
+let g:deoplete#enable_at_startup = 1
+" deoplete tab-complete
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
-let g:PyFlakeOnWrite = 1
+"airline
+let g:airline_theme= 'luna'
+let g:airline_powerline_fonts = 1
 
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+"let g:airline#extensions#tabline#right_sep = ' '
+"let g:airline#extensions#tabline#right_alt_sep = '|'
+"let g:airline_left_sep = ' '
+"let g:airline_left_alt_sep = '|'
+"let g:airline_right_sep = ' '
+"let g:airline_right_alt_sep = '|'
+
+let NERDTreeShowHidden = 1
+
+" let g:PyFlakeOnWrite = 1
+
+"-----
 " docstringは表示しない jedi
 autocmd FileType python setlocal completeopt-=preview
 
