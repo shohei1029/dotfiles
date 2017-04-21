@@ -36,8 +36,6 @@ inoremap <c-l> <right>
 
 syntax on
 
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-
 "Python3 support
 "let g:python3_host_prog = expand('$HOME') . '/.pyenv/shims/python'
 let g:python3_host_prog = expand('$HOME') . '/.pyenv/shims/python3'
@@ -85,12 +83,6 @@ endif
 
 " other settings ---
 
-" vim theme
-set background=dark
-"colorscheme kalisi
-"colorscheme OceanicNext
-colorscheme hybrid
-
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
 " deoplete tab-complete
@@ -119,4 +111,28 @@ let NERDTreeShowHidden = 1
 " docstringは表示しない jedi
 autocmd FileType python setlocal completeopt-=preview
 
+"Rust
+"rust.vim
+let g:rustfmt_autosave = 1
+let g:rustfmt_command = '~/.cargo/bin/rustfmt'
+"vim-racer
+set hidden
+let g:racer_cmd = '~/.cargo/bin/racer'
+let $RUST_SRC_PATH = "~/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src"
+"deoplete-rust
+let g:deoplete#sources#rust#racer_binary = '~/.cargo/bin/racer'
+let g:deoplete#sources#rust#rust_source_path = '~/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+
+" vim theme
+" If you have vim >=8.0 or Neovim >= 0.1.5
+"if (has("termguicolors"))
+" set termguicolors
+"endif
+" For Neovim 0.1.3 and 0.1.4
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+set background=dark
+"colorscheme kalisi
+"colorscheme OceanicNext
+colorscheme hybrid
 syntax enable

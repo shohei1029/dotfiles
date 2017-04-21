@@ -7,6 +7,8 @@ on_i = 1
 #repo = 'Shougo/denite.nvim'
 
 
+#Lang
+
 [[plugins]]
 repo = 'davidhalter/jedi-vim'
 on_ft = ['python','python3']
@@ -15,7 +17,9 @@ on_ft = ['python','python3']
 repo = 'zchee/deoplete-jedi'
 on_ft = ['python','python3']
 
+
 #[[plugins]]
 #repo = 'andviro/flake8-vim'
 #on_ft = ['python','python3']
+
 
