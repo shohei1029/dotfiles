@@ -1,0 +1,5 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_1='/usr/local/Cellar/zplug/2.3.0/repos/sorin-ionescu/prezto/modules/utility'
+let g:netrw_dirhist_2='/Users/NagataShohei/Documents/bio-study/16spp'
+let g:netrw_dirhist_3='/Users/NagataShohei/Documents/bio-study/16spp/scripts/test'
