@@ -49,7 +49,7 @@ esac
 [ -f ~/.zplug/init.zsh ] && source ~/.zplug/init.zsh
 
 ## plugins
-zplug "zplug/zplug"
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 ### prezto modules
 zplug "modules/environment", from:prezto #Sets general shell options and defines environment variables.
 #zplug "modules/history", from:prezto #Sets history options and defines history aliases.

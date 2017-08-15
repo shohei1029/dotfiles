@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Created on 2016.11.08 by Shohei Nagata.
+
+if [ "$*" != "" ];then
+    curl -X POST -H 'Authorization: Bearer 9j4Wh91rIDPYGJq4t7zkAa3zeoKozXyZ1ztAQhVDQLy' -F "message=$*" https://notify-api.line.me/api/notify
+    echo "${*:1}"
+else 
+    curl -X POST -H 'Authorization: Bearer 9j4Wh91rIDPYGJq4t7zkAa3zeoKozXyZ1ztAQhVDQLy' -F 'message=job done!' https://notify-api.line.me/api/notify
+    echo "job done!"
+fi
+
+

@@ -8,20 +8,6 @@ set nocompatible
 
 " no tab 
 set expandtab
-
-"----------------------------------------
-" 内部エンコーディング指定
-"----------------------------------------
-"内部エンコーディングのUTF-8化と文字コードの自動認識設定をencode.vimで行う。
-"オールインワンパッケージの場合 vimrcで設定されているので何もしない。
-"エンコーディング指定や文字コードの自動認識設定が適切に設定されている場合、
-"次行の encode.vim読込部分はコメントアウトして下さい。「encode.vimについて」
-"silent! source $MY_VIMRUNTIME/pluginjp/encode.vim
-
-"scriptencodingと異なる内部エンコーディングに変更する場合、
-"変更後にもscriptencodingを指定しておくと問題が起きにくくなります。
-"scriptencoding cp932
-
 "----------------------------------------
 " システム設定
 "----------------------------------------
@@ -36,9 +22,9 @@ set nobackup
 "再読込、vim終了後も継続するアンドゥ(7.3)
 if version >= 703
   "Persistent undoを有効化(7.3)
-  "set undofile
+  set undofile
   "アンドゥの保存場所(7.3)
-  "set undodir=.
+  set undodir=.
 endif
 "viminfoを作成しない
 "set viminfo=
@@ -125,10 +111,9 @@ set display=lastline
 " set list
 " set listchars=tab:^\ ,trail:~
 
-" ハイライトを有効にする
-if &t_Co > 2 || has('gui_running')
-  syntax on
-endif
+syntax enable
+syntax on
+
 
 """"""""""""""""""""""""""""""
 "ステータスラインに文字コードやBOM、16進表示等表示
@@ -211,42 +196,6 @@ function! s:GetHighlight(hi)
   let hl = substitute(hl, 'xxx', '', '')
   return hl
 endfunction
-
-""""""""""""""""""""""""""""""
-"全角スペースを表示
-""""""""""""""""""""""""""""""
-"コメント以外で全角スペースを指定しているので、scriptencodingと、
-"このファイルのエンコードが一致するよう注意！
-"強調表示されない場合、ここでscriptencodingを指定するとうまくいく事があります。
-"scriptencoding cp932
-
-"デフォルトのZenkakuSpaceを定義
-function! ZenkakuSpace()
-  highlight ZenkakuSpace cterm=underline ctermfg=darkgrey gui=underline guifg=darkgrey
-endfunction
-
-if has('syntax')
-  augroup ZenkakuSpace
-    autocmd!
-    " ZenkakuSpaceをカラーファイルで設定するなら次の行は削除
-    autocmd ColorScheme       * call ZenkakuSpace()
-    " 全角スペースのハイライト指定
-    autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
-  augroup END
-  call ZenkakuSpace()
-endif
-
-""""""""""""""""""""""""""""""
-"grep,tagsのためカレントディレクトリをファイルと同じディレクトリに移動する
-""""""""""""""""""""""""""""""
-"if exists('+autochdir')
-"  "autochdirがある場合カレントディレクトリを移動
-"  set autochdir
-"else
-"  "autochdirが存在しないが、カレントディレクトリを移動したい場合
-"  au BufEnter * execute ":silent! lcd " . escape(expand("%:p:h"), ' ')
-"endif
-
 
 
 " ☆-------------------------------------☆
@@ -359,12 +308,12 @@ vnoremap &lt;Tab&gt; %
 " nnoremap <S-Up>    <C-w>-<CR>
 " nnoremap <S-Down>  <C-w>+<CR>
 " T + ? で各種設定をトグル
-nnoremap [toggle] <Nop>
-nmap T [toggle]
-nnoremap <silent> [toggle]s :setl spell!<CR>:setl spell?<CR>
-nnoremap <silent> [toggle]l :setl list!<CR>:setl list?<CR>
-nnoremap <silent> [toggle]t :setl expandtab!<CR>:setl expandtab?<CR>
-nnoremap <silent> [toggle]w :setl wrap!<CR>:setl wrap?<CR>
+"nnoremap [toggle] <Nop>
+"nmap T [toggle]
+"nnoremap <silent> [toggle]s :setl spell!<CR>:setl spell?<CR>
+"nnoremap <silent> [toggle]l :setl list!<CR>:setl list?<CR>
+"nnoremap <silent> [toggle]t :setl expandtab!<CR>:setl expandtab?<CR>
+"nnoremap <silent> [toggle]w :setl wrap!<CR>:setl wrap?<CR>
  
 " :e などでファイルを開く際にフォルダが存在しない場合は自動作成
 function! s:mkdir(dir, force)
@@ -408,47 +357,47 @@ nnoremap <Space>  <C-E>
 nnoremap <S-Space> <C-Y>
 
 " for japanese set
-if &encoding !=# 'utf-8'
-	set encoding=japan
-	set fileencoding=japan
-endif
-if has('iconv')
-	let s:enc_euc = 'euc-jp'
-	let s:enc_jis = 'iso-2022-jp'
-	if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
-		let s:enc_euc = 'eucjp-ms'
-		let s:enc_jis = 'iso-2022-jp-3'
-	elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
-		let s:enc_euc = 'euc-jisx0213'
-		let s:enc_jis = 'iso-2022-jp-3'
-	endif
-	if &encoding ==# 'utf-8'
-		let s:fileencodings_default = &fileencodings
-		if has('mac')
-			let &fileencodings = s:enc_jis .','. s:enc_euc
-			let &fileencodings = &fileencodings .','. s:fileencodings_default
-		else
-			let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
-			let &fileencodings = &fileencodings .','. s:fileencodings_default
-		endif
-		unlet s:fileencodings_default
-	else
-		let &fileencodings = &fileencodings .','. s:enc_jis
-		set fileencodings+=utf-8,ucs-2le,ucs-2
-		if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
-			set fileencodings+=cp932
-			set fileencodings-=euc-jp
-			set fileencodings-=euc-jisx0213
-			set fileencodings-=eucjp-ms
-			let &encoding = s:enc_euc
-			let &fileencoding = s:enc_euc
-		else
-			let &fileencodings = &fileencodings .','. s:enc_euc
-		endif
-	endif
-	unlet s:enc_euc
-	unlet s:enc_jis
-endif
+" if &encoding !=# 'utf-8'
+" 	set encoding=japan
+" 	set fileencoding=japan
+" endif
+" if has('iconv')
+" 	let s:enc_euc = 'euc-jp'
+" 	let s:enc_jis = 'iso-2022-jp'
+" 	if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
+" 		let s:enc_euc = 'eucjp-ms'
+" 		let s:enc_jis = 'iso-2022-jp-3'
+" 	elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
+" 		let s:enc_euc = 'euc-jisx0213'
+" 		let s:enc_jis = 'iso-2022-jp-3'
+" 	endif
+" 	if &encoding ==# 'utf-8'
+" 		let s:fileencodings_default = &fileencodings
+" 		if has('mac')
+" 			let &fileencodings = s:enc_jis .','. s:enc_euc
+" 			let &fileencodings = &fileencodings .','. s:fileencodings_default
+" 		else
+" 			let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
+" 			let &fileencodings = &fileencodings .','. s:fileencodings_default
+" 		endif
+" 		unlet s:fileencodings_default
+" 	else
+" 		let &fileencodings = &fileencodings .','. s:enc_jis
+" 		set fileencodings+=utf-8,ucs-2le,ucs-2
+" 		if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
+" 			set fileencodings+=cp932
+" 			set fileencodings-=euc-jp
+" 			set fileencodings-=euc-jisx0213
+" 			set fileencodings-=eucjp-ms
+" 			let &encoding = s:enc_euc
+" 			let &fileencoding = s:enc_euc
+" 		else
+" 			let &fileencodings = &fileencodings .','. s:enc_euc
+" 		endif
+" 	endif
+" 	unlet s:enc_euc
+" 	unlet s:enc_jis
+" endif
 
 
 "" PATHの自動更新関数
@@ -606,11 +555,11 @@ autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'ujihisa/unite-colorscheme'
 "colorscheme 
-NeoBundle 'chriskempson/vim-tomorrow-theme'
+NeoBundleLazy 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'w0ng/vim-hybrid'
-NeoBundle 'altercation/vim-colors-solarized'
+NeoBundleLazy 'altercation/vim-colors-solarized'
 
-syntax on
+"syntax on
 set background=dark
 if ($ft=='ruby')
 	colorscheme Tomorrow-Night
@@ -712,17 +661,17 @@ nnoremap <silent> ciy ciw<C-r>0<ESC>:let@/=@1<CR>:noh<CR>
 nnoremap <silent> cy   ce<C-r>0<ESC>:let@/=@1<CR>:noh<CR>
 vnoremap <silent> cy   c<C-r>0<ESC>:let@/=@1<CR>:noh<CR>
 
-NeoBundle 'JuliaLang/julia-vim'
+NeoBundleLazy 'JuliaLang/julia-vim'
 
 " Ruby
-NeoBundle 'vim-ruby/vim-ruby'
+NeoBundleLazy 'vim-ruby/vim-ruby'
 
 
 " Haskell
-NeoBundle 'dag/vim2hs'
+NeoBundleLazy 'dag/vim2hs'
 "NeoBundle 'kana/vim-filetype-haskell' "インデントプラグイン
-NeoBundle 'ujihisa/neco-ghc'
-NeoBundle 'eagletmt/ghcmod-vim' " 静的解析ツールのghcmodをvimと連携,:GhcModTypeとかで。
+NeoBundleLazy 'ujihisa/neco-ghc'
+NeoBundleLazy 'eagletmt/ghcmod-vim' " 静的解析ツールのghcmodをvimと連携,:GhcModTypeとかで。
 
 " python
 ""NeoBundle 'davidhalter/jedi-vim'
@@ -787,10 +736,10 @@ NeoBundleLazy "lambdalisue/vim-pyenv", {
 
 "for Perl
 " 保存時に自動でsyntax check
-autocmd BufNewFile,BufRead *.psgi   set filetype=perl
-autocmd BufNewFile,BufRead *.t      set filetype=perl
-inoremap <C-d> $
-inoremap <C-a> @
+" autocmd BufNewFile,BufRead *.psgi   set filetype=perl
+" autocmd BufNewFile,BufRead *.t      set filetype=perl
+" inoremap <C-d> $
+" inoremap <C-a> @
 
 " Processing
 NeoBundleLazy 'sophacles/vim-processing'
@@ -851,5 +800,4 @@ let s:local_vimrc = expand('~/.vimrc.local')
 if filereadable(s:local_vimrc)
     execute 'source ' . s:local_vimrc
 endif
-
 
