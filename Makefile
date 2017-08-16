@@ -21,8 +21,8 @@ deploy: ## Create symlink to home directory
 
 min_deploy: ## deploy: of minimized setting files in 'min_sets' dir (by S.N.)
 	#vim and zsh (hard coding)
-	ln -sfnv ./min_sets/.vimrc ~/.vimrc
-	ln -sfnv ./min_sets/.zshrc ~/.zshrc
+	ln -sfnv $(abspath ./min_sets/.vimrc) ~/.vimrc
+	ln -sfnv $(abspath ./min_sets/.zshrc) ~/.zshrc
 
 init: ## Setup environment settings
 	@DOTPATH=$(DOTPATH) bash $(DOTPATH)/etc/init/init.sh
