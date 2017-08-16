@@ -20,8 +20,9 @@ deploy: ## Create symlink to home directory
 	@$(foreach val, $(DOTFILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 
 min_deploy: ## deploy: of minimized setting files in 'min_sets' dir (by S.N.)
-	#vim (hard coding..orz)
+	#vim and zsh (hard coding)
 	ln -sfnv ./min_sets/.vimrc ~/.vimrc
+	ln -sfnv ./min_sets/.zshrc ~/.zshrc
 
 init: ## Setup environment settings
 	@DOTPATH=$(DOTPATH) bash $(DOTPATH)/etc/init/init.sh
