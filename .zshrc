@@ -93,9 +93,11 @@ prompt paradox
 
 # nvim
 export XDG_CONFIG_HOME=~/.config
+
 ## load user .zshrc configuration file
 ##
 [ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
 ### Command history configuration (overwrite a part of prezto:history module settings)
 HISTFILE=~/.zsh_history
