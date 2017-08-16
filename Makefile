@@ -1,11 +1,13 @@
 DOTPATH    := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES := $(wildcard .??*) bin
-EXCLUSIONS := .DS_Store .git .gitmodules .travis.yml
+EXCLUSIONS := .DS_Store .git .gitmodules .travis.yml .config
 DOTFILES   := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
 
 .DEFAULT_GOAL := help
 
-#vim: Set 'set noexpandtab' option to edit this file.
+#for vim: Set 'set noexpandtab' option to edit this file.
+#problem: .confg うまくいかない. ひとまずEXCLUSIONSに.
+
 
 all:
 
