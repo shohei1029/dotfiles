@@ -42,3 +42,8 @@ esac
 if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
+
+# Source local settings
+if [ -f ~/.bashrc.local ]; then
+    . ~/.bashrc.local
+fi
