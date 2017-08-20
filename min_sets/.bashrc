@@ -26,7 +26,6 @@ linux*)
 	;;
 esac
 
-
 # Environment variable configuration
 #
 # LANG
@@ -37,3 +36,9 @@ case ${UID} in
 		LANG=C
 		;;
 esac
+
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
