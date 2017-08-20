@@ -19,13 +19,13 @@ deploy: ## Create symlink to home directory
 	@echo ''
 	@$(foreach val, $(DOTFILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 
+#vim, bash, zsh and bin dir (hard coding)
 min_deploy: ## deploy: of minimized setting files in 'min_sets' dir (by S.N.)
-	#vim, bash, zsh and bin dir (hard coding)
 	ln -sfnv $(abspath ./min_sets/.vimrc) ~/.vimrc
 	ln -sfnv $(abspath ./min_sets/.zshrc) ~/.zshrc
 	ln -sfnv $(abspath ./min_sets/.bashrc) ~/.bashrc 
-	ln -sfnv $(abspath bin) ~/bin
-	#@$(foreach val, $(filter-out $(EXCLUSIONS), $(wildcard ./min_sets/.??*)), ln -sfnv $(abspath $(val)) $(HOME)/$(val);) #うまくいかない
+	ln -snv $(abspath bin) ~/bin
+#@$(foreach val, $(filter-out $(EXCLUSIONS), $(wildcard ./min_sets/.??*)), ln -sfnv $(abspath $(val)) $(HOME)/$(val);) #うまくいかない
 
 init: ## Setup environment settings
 	@DOTPATH=$(DOTPATH) bash $(DOTPATH)/etc/init/init.sh
