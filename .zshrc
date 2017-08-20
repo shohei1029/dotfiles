@@ -98,6 +98,7 @@ export XDG_CONFIG_HOME=~/.config
 ##
 [ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 ### Command history configuration (overwrite a part of prezto:history module settings)
 HISTFILE=~/.zsh_history
@@ -137,6 +138,7 @@ alias af=anyframe-widget-select-widget
 #enhancd
 ENHANCD_DISABLE_HOME=1
 ENHANCD_FILTER=fzf:peco
+ENHANCD_HOOK_AFTER_CD='ls -GF'
 
 #emoji-cli
 EMOJI_CLI_FILTER=fzf:peco
@@ -177,4 +179,3 @@ fkill() {
   fi
 }
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
