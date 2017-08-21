@@ -30,6 +30,7 @@ if [ `uname` = "Darwin" ]; then
         xz
         zsh
         zsh-completions
+        reattach-to-user-namespace # for tmux-yank
     )
 
     echo "brew tap..."
@@ -50,6 +51,8 @@ fi
 #zplug
 if [ ! `which zplug` ];then
     curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
-#    ln -s `pwd`/.zshrc ~/.zshrc
-    source ~/.zshrc
 fi
+
+
+#tmux
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
