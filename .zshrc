@@ -138,7 +138,7 @@ alias af=anyframe-widget-select-widget
 #enhancd
 ENHANCD_DISABLE_HOME=1
 ENHANCD_FILTER=fzf:peco
-ENHANCD_HOOK_AFTER_CD='ls -GF'
+ENHANCD_HOOK_AFTER_CD='ls -GFl'
 
 #emoji-cli
 EMOJI_CLI_FILTER=fzf:peco
