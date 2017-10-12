@@ -69,7 +69,13 @@ zplug "mollifier/anyframe"
 zplug "peco/peco", as:command, from:gh-r #functionaly same as fzf
 zplug "junegunn/fzf-bin", as:command, rename-to:"fzf", from:gh-r
 zplug "b4b4r07/enhancd", use:init.sh
-zplug "b4b4r07/emoji-cli", if:"which jq" #installed jq by homebrew
+zplug "stedolan/jq", \
+    from:gh-r, \
+    as:command, \
+    rename-to:jq
+#zplug "b4b4r07/emoji-cli", if:"which jq" #installed jq by homebrew
+zplug "b4b4r07/emoji-cli", \
+    on:"stedolan/jq"
 ##
 
 # Install plugins if there are plugins that have not been installed
@@ -83,6 +89,9 @@ fi
 # Then, source plugins and add commands to $PATH
 zplug load 
 #zplug load --verbose
+
+#peco, fzfにpathが通ってない問題の応急処置 (171012)
+export PATH="$HOME/.zplug/bin:$PATH"
 
 #use prompt from prezto
 autoload -Uz promptinit
@@ -161,6 +170,22 @@ ch() {
   # Copy History DB to circumvent the lock
   # - See http://stackoverflow.com/questions/8936878 for the file path
   cp -f ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
+
+  sqlite3 -separator $sep /tmp/h \
+    "select substr(title, 1, $cols), url
+     from urls order by last_visit_time desc" |
+  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\n", $1, $2}' |
+  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs open
+}
+vh() { #for vivaldi
+  local cols sep
+  cols=$(( COLUMNS / 3 ))
+  sep='{{::}}'
+
+  # Copy History DB to circumvent the lock
+  # - See http://stackoverflow.com/questions/8936878 for the file path
+  #cp -f ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
+  cp -f ~/Library/Application\ Support/Vivaldi/Default/History /tmp/h #for vivaldi
 
   sqlite3 -separator $sep /tmp/h \
     "select substr(title, 1, $cols), url
