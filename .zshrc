@@ -43,9 +43,10 @@ esac
 
 
 # zplug
-#export ZPLUG_HOME=/usr/local/opt/zplug
-#source $ZPLUG_HOME/init.zsh
-#[ -f /usr/local/opt/zplug/init.zsh ] && source /usr/local/opt/zplug/init.zsh
+if [[ ! -d ~/.zplug ]];then
+    curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
+fi
+
 [ -f ~/.zplug/init.zsh ] && source ~/.zplug/init.zsh
 
 ## plugins
@@ -63,6 +64,7 @@ zplug "modules/prompt", from:prezto
 
 zplug "zsh-users/zsh-syntax-highlighting", defer:2 #load this before load zsh-history-substring-search
 zplug "zsh-users/zsh-history-substring-search"
+zplug "zsh-users/zsh-autosuggestions"
 #zplug "zsh-users/zsh-completions" # use prezo version
 zplug "felixr/docker-zsh-completion"
 zplug "mollifier/anyframe"
@@ -76,6 +78,7 @@ zplug "stedolan/jq", \
 #zplug "b4b4r07/emoji-cli", if:"which jq" #installed jq by homebrew
 zplug "b4b4r07/emoji-cli", \
     on:"stedolan/jq"
+zplug "shohei1029/xiang", as:command, use:"bin/*"
 ##
 
 # Install plugins if there are plugins that have not been installed
