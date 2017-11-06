@@ -78,7 +78,7 @@ zplug "stedolan/jq", \
 #zplug "b4b4r07/emoji-cli", if:"which jq" #installed jq by homebrew
 zplug "b4b4r07/emoji-cli", \
     on:"stedolan/jq"
-zplug "shohei1029/xiang", as:command, use:"bin/*"
+#zplug "shohei1029/xiang", as:command, use:"bin/*"
 ##
 
 # Install plugins if there are plugins that have not been installed
