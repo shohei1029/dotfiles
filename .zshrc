@@ -115,7 +115,7 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 ### Command history configuration (overwrite a part of prezto:history module settings)
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
-SAVEHIST=2000000
+SAVEHIST=20000000
 #setopt hist_ignore_dups     # ignore duplication command history list
 #setopt share_history        # share command history data
 setopt BANG_HIST                 # Treat the '!' character specially during expansion.
