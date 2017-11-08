@@ -59,7 +59,7 @@ zplug "modules/spectrum", from:prezto #Provides for easier use of 256 colors and
 #zplug "modules/utility", from:prezto #Defines general aliases and functions.
 zplug "modules/completion", from:prezto #Loads and configures tab completion and provides additional completions from the zsh-completions project.
 zplug "modules/git", from:prezto
-zplug "modules/prompt", from:prezto
+#zplug "modules/prompt", from:prezto
 #zplug "sorin-ionescu/prezto" #don't use this because now we have from:prezto
 
 zplug "zsh-users/zsh-syntax-highlighting", defer:2 #load this before load zsh-history-substring-search
@@ -79,6 +79,7 @@ zplug "stedolan/jq", \
 zplug "b4b4r07/emoji-cli", \
     on:"stedolan/jq"
 #zplug "shohei1029/xiang", as:command, use:"bin/*"
+zplug "shohei1029/xiang" # prompt seraph
 ##
 
 # Install plugins if there are plugins that have not been installed
@@ -99,7 +100,7 @@ export PATH="$HOME/.zplug/bin:$PATH"
 #use prompt from prezto
 autoload -Uz promptinit
 promptinit
-prompt paradox
+prompt seraph
 
 # other settings
 
