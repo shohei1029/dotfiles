@@ -40,8 +40,8 @@ syntax on
 "let g:python3_host_prog = expand('$HOME') . '/.pyenv/shims/python'
 let g:python3_host_prog = expand('$HOME') . '/.pyenv/shims/python3'
 
-
-" dein settings {{{
+" ---
+" dein settings:
 if &compatible
   set nocompatible
 endif
@@ -49,14 +49,15 @@ endif
 let s:dein_dir = expand('~/.config/nvim/dein')
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 
-" なければgit clone
-if !isdirectory(s:dein_repo_dir)
-  execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+" dein.vim がなければ github から落としてくる
+if &runtimepath !~# '/dein.vim'
+  if !isdirectory(s:dein_repo_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+  endif
+  execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
 endif
 
-execute 'set runtimepath^=' . s:dein_repo_dir
-
-
+" 設定開始
 if dein#load_state(s:dein_dir)
   call dein#begin(s:dein_dir)
 
@@ -72,12 +73,10 @@ if dein#load_state(s:dein_dir)
   call dein#save_state()
 endif
 
-
 " もし、未インストールものものがあったらインストール
 if dein#check_install()
   call dein#install()
 endif
-" }}}
 " ---
 
 
@@ -111,6 +110,10 @@ let NERDTreeShowHidden = 1
 " docstringは表示しない jedi
 autocmd FileType python setlocal completeopt-=preview
 
+"Python
+let g:deoplete#sources#jedi#server_timeout = 5
+
+
 "Rust
 "rust.vim
 let g:rustfmt_autosave = 1
@@ -125,14 +128,16 @@ let g:deoplete#sources#rust#rust_source_path = '~/.multirust/toolchains/stable-x
 
 " vim theme
 " If you have vim >=8.0 or Neovim >= 0.1.5
-"if (has("termguicolors"))
-" set termguicolors
-"endif
+if (has("termguicolors"))
+ set termguicolors
+endif
 " For Neovim 0.1.3 and 0.1.4
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+"let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 set background=dark
 "colorscheme kalisi
 "colorscheme OceanicNext
 colorscheme hybrid
+
+filetype plugin indent on
 syntax enable

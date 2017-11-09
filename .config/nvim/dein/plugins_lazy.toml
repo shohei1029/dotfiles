@@ -2,6 +2,9 @@
 #[[plugins]]
 #repo = 'Shougo/denite.nvim'
 
+[[plugins]]
+repo = 'Shougo/deoplete.nvim'
+on_i = 1
 
 #Lang
 
@@ -17,5 +20,20 @@ on_ft = ['python','python3']
 #[[plugins]]
 #repo = 'andviro/flake8-vim'
 #on_ft = ['python','python3']
+
+[[plugins]]
+repo = 'othree/yajs.vim'
+on_ft = ['javascript']
+
+[[plugins]]
+repo = 'rust-lang/rust.vim'
+on_ft = ['rust']
+[[plugins]]
+repo = 'racer-rust/vim-racer'
+on_ft = ['rust']
+[[plugins]]
+repo = 'sebastianmarkow/deoplete-rust'
+on_ft = ['rust']
+
 
 

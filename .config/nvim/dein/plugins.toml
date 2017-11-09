@@ -1,9 +1,6 @@
 [[plugins]]
 repo = 'Shougo/dein.vim'
 
-[[plugins]]
-repo = 'Shougo/deoplete.nvim'
-on_i = 1
 
 #[[plugins]]
 #repo = 'Shougo/vimproc'
@@ -43,19 +40,3 @@ repo = 'scrooloose/nerdtree'
 
 [[plugins]]
 repo = 'cohama/lexima.vim'
-
-#Lang
-[[plugins]]
-repo = 'othree/yajs.vim'
-on_ft = ['javascript']
-
-[[plugins]]
-repo = 'rust-lang/rust.vim'
-on_ft = ['rust']
-[[plugins]]
-repo = 'racer-rust/vim-racer'
-on_ft = ['rust']
-[[plugins]]
-repo = 'sebastianmarkow/deoplete-rust'
-on_ft = ['rust']
-
