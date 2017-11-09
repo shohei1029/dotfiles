@@ -81,9 +81,6 @@ setopt correct
 setopt list_packed
 # no beep sound when complete list displayed
 setopt nolistbeep
-## Prediction configuration
-autoload predict-on
-predict-on
 
 ## load user .zshrc configuration file
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
