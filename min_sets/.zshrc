@@ -57,13 +57,6 @@ linux*)
 	;;
 esac
 
-export LANG=ja_JP.UTF-8
-case ${UID} in
-	0)
-		LANG=C
-		;;
-esac
-
 # historical backward/forward search with linehead string binded to ^P/^N
 autoload history-search-end
 zle -N history-beginning-search-backward-end history-search-end
