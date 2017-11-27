@@ -25,7 +25,7 @@ if [ `uname` = "Darwin" ]; then
         luajit
         neovim
         openssl
-        pyenv
+#        pyenv
         ricty
         rsync
         sqlite
@@ -102,20 +102,30 @@ if [ ! `which zplug` ];then
     curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
 fi
 
-#pyenv
-if [ ! `which pyenv` ];then
-    git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
-    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
-    echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bash_profile
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshenv
-    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshenv
-    echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.zshenv
-fi
-#pyenv-update (pyenv plugin)
-git clone git://github.com/pyenv/pyenv-update.git ~/.pyenv/plugins/pyenv-update
+#anyenv
+git clone https://github.com/riywo/anyenv ~/.anyenv
+[ ! -d $(pyenv root)/plugins/pyenv-virtualenv ] && git clone https://github.com/yyuu/pyenv-virtualenv $(pyenv root)/plugins/pyenv-virtualenv
+mkdir -p $(anyenv root)/plugins
+git clone https://github.com/znz/anyenv-update.git $(anyenv root)/plugins/anyenv-update
+#ln -s ~/.anyenv/envs/pyenv ~/.pyenv #一応
+
+echo 'export PATH="$HOME/.anyenv/bin:$PATH"' >> ~/.bash_profile 
+echo 'eval "$(anyenv init - --no-rehash)"' >> ~/.bash_profile
+
+##pyenv (deprecated, use anyenv)
+#if [ ! `which pyenv` ];then
+#    git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+#    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
+#    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
+#    echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bash_profile
+#    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshenv
+#    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshenv
+#    echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.zshenv
+#fi
+##pyenv-update (pyenv plugin)
+#git clone git://github.com/pyenv/pyenv-update.git ~/.pyenv/plugins/pyenv-update
 
 #for tmux
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-pip install neovim
+#pip install neovim
