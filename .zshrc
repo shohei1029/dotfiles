@@ -59,7 +59,7 @@ zplug "modules/spectrum", from:prezto #Provides for easier use of 256 colors and
 #zplug "modules/utility", from:prezto #Defines general aliases and functions.
 zplug "modules/completion", from:prezto #Loads and configures tab completion and provides additional completions from the zsh-completions project.
 zplug "modules/git", from:prezto
-#zplug "modules/prompt", from:prezto
+zplug "modules/prompt", from:prezto
 #zplug "sorin-ionescu/prezto" #don't use this because now we have from:prezto
 
 zplug "zsh-users/zsh-syntax-highlighting", defer:2 #load this before load zsh-history-substring-search
@@ -107,9 +107,21 @@ prompt seraph
 # nvim
 export XDG_CONFIG_HOME=~/.config
 
+# anyanv
+if [ -d $HOME/.anyenv ]
+then
+    export PATH="$HOME/.anyenv/bin:$PATH"
+    eval "$(anyenv init - --no-rehash)"
+fi
+
+#zcompile
+if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
+  zcompile ~/.zshrc
+fi
+
 ## load user .zshrc configuration file
 ##
-[ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
+#[ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
@@ -155,6 +167,7 @@ ENHANCD_HOOK_AFTER_CD='ls -GFl'
 
 #emoji-cli
 EMOJI_CLI_FILTER=fzf:peco
+
 
 
 # fzf
@@ -207,4 +220,3 @@ fkill() {
     kill -${1:-9} $pid
   fi
 }
-
