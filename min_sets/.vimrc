@@ -20,9 +20,11 @@ set statusline=%F "ファイル名表示
 set statusline+=%m "変更チェック表示
 set statusline+=%= "これ以降は右寄せ表示
 set statusline+=%r "読み込み専用かどうか表示
-set statusline+=[%{has('multi_byte')&&\&fileencoding!=''?&fileencoding:&encoding}] "file encoding
-set statusline+=%y "ファイルタイプ表示
-set statusline+=%{matchstr(hostname(),'\\w\\+')}@ "ホスト名表示
+set statusline+=\ <%l/%L> " 現在行数/全行数
+set statusline+=\ %y "ファイルタイプ表示
+set statusline+=\ %{has('multi_byte')&&\&fileencoding!=''?&fileencoding:&encoding} "file encoding
+set statusline+=[%{&fileformat}] "ファイルフォーマット表示
+set statusline+=\ @%{matchstr(hostname(),'\\w\\+')} "ホスト名表示
 set laststatus=2 "ステータスラインを常に表示(0:表示しない、1:2つ以上ウィンドウがある時だけ表示)
  
 nnoremap <Down> gj
