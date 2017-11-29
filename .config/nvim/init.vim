@@ -33,13 +33,7 @@ inoremap <c-k> <up>
 inoremap <c-h> <left>
 inoremap <c-l> <right>
 
-
 syntax on
-
-"Python3 support
-"let g:python3_host_prog = expand('$HOME') . '/.pyenv/shims/python'
-"let g:python3_host_prog = expand('$HOME') . '/.pyenv/shims/python3'
-let g:python3_host_prog = $PYENV_ROOT . '/shims/python3'
 
 " ---
 " dein settings:
@@ -69,8 +63,6 @@ if dein#load_state(s:dein_dir)
   " TOML を読み込み、キャッシュしておく
   call dein#load_toml(s:toml, {'lazy': 0})
   call dein#load_toml(s:lazy_toml, {'lazy': 1})
-
-  call dein#local('~/Documents/projects/bio.nvim')
 
   call dein#end()
   call dein#save_state()

@@ -40,3 +40,7 @@ repo = 'scrooloose/nerdtree'
 
 [[plugins]]
 repo = 'cohama/lexima.vim'
+
+#by S.N>
+[[plugins]]
+repo = 'shohei1029/bio.nvim'
