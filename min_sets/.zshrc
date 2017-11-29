@@ -77,3 +77,4 @@ setopt nolistbeep
 
 ## load user .zshrc configuration file
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+# Created by S.N.
