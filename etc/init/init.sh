@@ -43,8 +43,7 @@ if [ `uname` = "Darwin" ]; then
     echo "brew tap..."
     brew tap caskroom/cask 
     brew tap caskroom/fonts
-    brew tap homebrew/core
-    brew tap homebrew/science
+    brew tap homebrew/homebrew-core
 
     echo "brew install apps..."
     for formula in "${formulae[@]}"; do
@@ -76,7 +75,6 @@ elif [ `uname` = "Linux" ]; then
     )
 
 #    echo "brew tap..."
-#    brew tap homebrew/science
 
     echo "brew install apps..."
     for formula in "${formulae[@]}"; do
