@@ -75,8 +75,8 @@ elif [ `uname` = "Linux" ]; then
         aria2
     )
 
-    echo "brew tap..."
-    brew tap homebrew/science
+#    echo "brew tap..."
+#    brew tap homebrew/science
 
     echo "brew install apps..."
     for formula in "${formulae[@]}"; do
