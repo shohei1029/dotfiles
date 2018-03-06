@@ -99,28 +99,12 @@ let g:airline#extensions#tabline#left_alt_sep = '|'
 
 let NERDTreeShowHidden = 1
 
-" let g:PyFlakeOnWrite = 1
-
 "-----
 " docstringは表示しない jedi
 autocmd FileType python setlocal completeopt-=preview
 
-"Python
-let g:deoplete#sources#jedi#server_timeout = 5
-let g:python3_host_prog = $PYENV_ROOT . '/shims/python3'
+" 言語系プラグインの設定は.tomlへ移動
 
-
-"Rust
-"rust.vim
-let g:rustfmt_autosave = 1
-let g:rustfmt_command = '~/.cargo/bin/rustfmt'
-"vim-racer
-set hidden
-let g:racer_cmd = '~/.cargo/bin/racer'
-let $RUST_SRC_PATH = "~/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src"
-"deoplete-rust
-let g:deoplete#sources#rust#racer_binary = '~/.cargo/bin/racer'
-let g:deoplete#sources#rust#rust_source_path = '~/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
 
 " vim theme
 " If you have vim >=8.0 or Neovim >= 0.1.5

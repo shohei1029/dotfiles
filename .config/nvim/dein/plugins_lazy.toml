@@ -15,7 +15,19 @@ on_i = 1
 [[plugins]]
 repo = 'zchee/deoplete-jedi'
 on_ft = ['python','python3']
+hook_source = '''
+let g:deoplete#sources#jedi#server_timeout = 5
+"let g:python3_host_prog = $PYENV_ROOT . '/shims/python3'
+'''
 
+[[plugins]]
+repo = 'google/yapf'
+rtp = 'vim'
+on_ft = ['python','python3']
+hook_source = '''
+map <C-Y> :call yapf#YAPF()<cr>
+imap <C-Y> <c-o>:call yapf#YAPF()<cr>
+'''
 
 #[[plugins]]
 #repo = 'andviro/flake8-vim'
@@ -28,12 +40,24 @@ on_ft = ['javascript']
 [[plugins]]
 repo = 'rust-lang/rust.vim'
 on_ft = ['rust']
+hook_source = '''
+let g:rustfmt_autosave = 1
+let g:rustfmt_command = '~/.cargo/bin/rustfmt'
+'''
+
 [[plugins]]
 repo = 'racer-rust/vim-racer'
 on_ft = ['rust']
+hook_source = '''
+set hidden
+let g:racer_cmd = '~/.cargo/bin/racer'
+let $RUST_SRC_PATH = "~/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src"
+'''
+
 [[plugins]]
 repo = 'sebastianmarkow/deoplete-rust'
 on_ft = ['rust']
-
-
-
+hook_source = '''
+let g:deoplete#sources#rust#racer_binary = '~/.cargo/bin/racer'
+let g:deoplete#sources#rust#rust_source_path = '~/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+'''
