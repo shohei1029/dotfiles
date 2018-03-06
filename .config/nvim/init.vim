@@ -107,6 +107,7 @@ autocmd FileType python setlocal completeopt-=preview
 
 "Python
 let g:deoplete#sources#jedi#server_timeout = 5
+let g:python3_host_prog = $PYENV_ROOT . '/shims/python3'
 
 
 "Rust

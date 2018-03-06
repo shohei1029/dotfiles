@@ -8,9 +8,9 @@ on_i = 1
 
 #Lang
 
-[[plugins]]
-repo = 'davidhalter/jedi-vim'
-on_ft = ['python','python3']
+#[[plugins]]
+#repo = 'davidhalter/jedi-vim'
+#on_ft = ['python','python3']
 
 [[plugins]]
 repo = 'zchee/deoplete-jedi'
