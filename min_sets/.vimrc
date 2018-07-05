@@ -32,3 +32,5 @@ nnoremap <Up>   gk
 imap jj <esc>
 
 syntax on
+
+" Created by S.N.

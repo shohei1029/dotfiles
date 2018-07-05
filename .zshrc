@@ -90,6 +90,11 @@ if ! zplug check --verbose; then
     fi
 fi
 
+# zplug issue #374, #480
+if [ -f "$_zplug_lock" ]; then
+    rm "$_zplug_lock"
+fi
+
 # Then, source plugins and add commands to $PATH
 zplug load 
 #zplug load --verbose
@@ -101,6 +106,7 @@ export PATH="$HOME/.zplug/bin:$PATH"
 autoload -Uz promptinit
 promptinit
 prompt seraph
+zstyle ':prezto:module:prompt' pwd-length 'long' #do not abbreviate working directory path
 
 # other settings
 
@@ -127,7 +133,7 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 ### Command history configuration (overwrite a part of prezto:history module settings)
 HISTFILE=~/.zsh_history
-HISTSIZE=10000
+HISTSIZE=20000
 SAVEHIST=20000000
 #setopt hist_ignore_dups     # ignore duplication command history list
 #setopt share_history        # share command history data
