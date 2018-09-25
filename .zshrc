@@ -17,6 +17,7 @@ alias ipynb='ipython notebook'
 alias ipnb='ipynb'
 alias jpnb='jupyter notebook'
 alias nv='nvim'
+alias vtop="vtop --theme seti" #brewもよかった
 
 
 case "${OSTYPE}" in 
