@@ -4,9 +4,9 @@ alias f='ls -F'
 alias l='ls -l'
 alias a='ls -a'
 alias lh='ls -lh'
-alias sfcx='ssh t14650sn@ccx01.sfc.keio.ac.jp'
-alias sfcz='ssh t14650sn@ccz00.sfc.keio.ac.jp'
-alias sfcw='ssh t14650sn@webedit.sfc.keio.ac.jp'
+alias sfcx='ssh shohei@ccx01.sfc.keio.ac.jp'
+alias sfcz='ssh shohei@ccz00.sfc.keio.ac.jp'
+alias sfcw='ssh shohei@webedit.sfc.keio.ac.jp'
 alias smith1='ssh smith1'
 alias smith2='ssh smith2'
 alias smith3='ssh smith3'
@@ -75,7 +75,7 @@ zplug "b4b4r07/enhancd", use:init.sh
 zplug "stedolan/jq", \
     from:gh-r, \
     as:command, \
-    rename-to:jq
+    rename-to:"jq"
 #zplug "b4b4r07/emoji-cli", if:"which jq" #installed jq by homebrew
 zplug "b4b4r07/emoji-cli", \
     on:"stedolan/jq"
@@ -101,7 +101,7 @@ zplug load
 #zplug load --verbose
 
 #peco, fzfにpathが通ってない問題の応急処置 (171012)
-export PATH="$HOME/.zplug/bin:$PATH"
+path=($HOME/.zplug/bin(N-/) $path)
 
 #use prompt from prezto
 autoload -Uz promptinit
@@ -109,14 +109,22 @@ promptinit
 prompt seraph
 zstyle ':prezto:module:prompt' pwd-length 'long' #do not abbreviate working directory path
 
+
 # other settings
+path=($path ~/opt/bin(N-/))
+manpath=(~/opt/share/man(N-/) $manpath)
+
+if (( ${+commands[nvim]} )); then
+    export EDITOR="nvim"
+else
+    export EDITOR="vim"
+fi
 
 # nvim
 export XDG_CONFIG_HOME=~/.config
 
 # anyanv
-if [ -d $HOME/.anyenv ]
-then
+if [ -d $HOME/.anyenv ]; then
     export PATH="$HOME/.anyenv/bin:$PATH"
     eval "$(anyenv init - --no-rehash)"
 fi
@@ -127,8 +135,6 @@ if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
 fi
 
 ## load user .zshrc configuration file
-##
-#[ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
@@ -169,11 +175,11 @@ alias af=anyframe-widget-select-widget
 
 #enhancd
 ENHANCD_DISABLE_HOME=1
-ENHANCD_FILTER=fzf:peco
+ENHANCD_FILTER=fzy:fzf:peco
 ENHANCD_HOOK_AFTER_CD='ls -GFl'
 
 #emoji-cli
-EMOJI_CLI_FILTER=fzf:peco
+EMOJI_CLI_FILTER=fzy:fzf:peco
 
 
 
