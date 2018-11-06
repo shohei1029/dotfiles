@@ -75,6 +75,10 @@ setopt list_packed
 # no beep sound when complete list displayed
 setopt nolistbeep
 
+# other settings
+path=($path ~/opt/bin(N-/))
+manpath=(~/opt/share/man(N-/) $manpath)
+
 ## load user .zshrc configuration file
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 # Created by S.N.
