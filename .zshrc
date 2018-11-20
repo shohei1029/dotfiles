@@ -138,10 +138,10 @@ fi
 ## load user .zshrc configuration file
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-## load bash completions
-autoload bashcompinit
-bashcompinit
-[ -f ~/.bash_completion ] && source ~/.bash_completion
+### load bash completions
+#autoload bashcompinit
+#bashcompinit
+#[ -f ~/.bash_completion ] && source ~/.bash_completion
 
 ### Command history configuration (overwrite a part of prezto:history module settings)
 HISTFILE=~/.zsh_history
