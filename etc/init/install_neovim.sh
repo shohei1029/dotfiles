@@ -27,12 +27,13 @@ elif [ `uname` = "Linux" ]; then
 #        make install
 #        export PATH="$HOME/opt/bin:$PATH"
 #    fi
-#fi
+fi
 
 echo 'export XDG_CONFIG_HOME="~/.config"' >> ~/.zshenv
 echo 'export XDG_CONFIG_HOME="~/.config"' >> ~/.bash_profile
 
-mkdir -p ~/.config
-cp -r ./nvim ~/.config
-
 pip install neovim
+
+mkdir -p ~/.config
+#cp -r ./nvim ~/.config
+cp -r ../../.config/nvim ~/.config
