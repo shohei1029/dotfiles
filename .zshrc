@@ -70,7 +70,7 @@ zplug "zsh-users/zsh-autosuggestions"
 zplug "felixr/docker-zsh-completion"
 zplug "mollifier/anyframe"
 zplug "peco/peco", as:command, from:gh-r #functionaly same as fzf
-zplug "junegunn/fzf-bin", as:command, rename-to:"fzf", from:gh-r
+zplug "junegunn/fzf-bin", as:command, rename-to:"fzf", from:gh-r, use:"*darwin*amd64*"
 zplug "b4b4r07/enhancd", use:init.sh
 zplug "stedolan/jq", \
     from:gh-r, \
@@ -79,6 +79,7 @@ zplug "stedolan/jq", \
 #zplug "b4b4r07/emoji-cli", if:"which jq" #installed jq by homebrew
 zplug "b4b4r07/emoji-cli", \
     on:"stedolan/jq"
+ # type ^s to launch
 #zplug "shohei1029/xiang", as:command, use:"bin/*"
 zplug "shohei1029/xiang" # prompt seraph
 ##
@@ -111,6 +112,14 @@ zstyle ':prezto:module:prompt' pwd-length 'long' #do not abbreviate working dire
 
 
 # other settings
+# anyanv
+if [ -d $HOME/.anyenv ]; then
+    export PATH="$HOME/.anyenv/bin:$PATH"
+    eval "$(anyenv init - --no-rehash zsh)"
+    #eval "$(anyenv init - --no-rehash)"
+fi
+
+#path
 path=($path ~/opt/bin(N-/))
 manpath=(~/opt/share/man(N-/) $manpath)
 
@@ -122,13 +131,6 @@ fi
 
 # nvim
 export XDG_CONFIG_HOME=~/.config
-
-# anyanv
-if [ -d $HOME/.anyenv ]; then
-    export PATH="$HOME/.anyenv/bin:$PATH"
-    eval "$(anyenv init - --no-rehash zsh)"
-    #eval "$(anyenv init - --no-rehash)"
-fi
 
 #zcompile
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
