@@ -120,7 +120,8 @@ if [ -d $HOME/.anyenv ]; then
 fi
 
 #path
-path=($path ~/opt/bin(N-/))
+path=(~/opt/bin(N-/) $path)
+#path=($path ~/opt/bin(N-/))
 manpath=(~/opt/share/man(N-/) $manpath)
 
 if (( ${+commands[nvim]} )); then
