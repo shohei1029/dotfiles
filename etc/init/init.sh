@@ -10,9 +10,11 @@
 # pip install neovim
 
 #Homebrew
-if [ `uname` = "Darwin" ]; then
+if [ $(uname) = "Darwin" ]; then
     echo "installing homebrew..."
-    which brew >/dev/null 2>&1 || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    if test -z $(which brew); then
+        which brew >/dev/null 2>&1 || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    fi
 
     formulae=(
         autoconf
@@ -25,7 +27,7 @@ if [ `uname` = "Darwin" ]; then
         luajit
         neovim
         openssl
-#        pyenv
+        #        pyenv
         ricty
         rsync
         sqlite
@@ -36,12 +38,12 @@ if [ `uname` = "Darwin" ]; then
         wget
         xz
         zsh
-#        zsh-completions
+        #        zsh-completions
         reattach-to-user-namespace # for tmux-yank
     )
 
     echo "brew tap..."
-    brew tap caskroom/cask 
+    brew tap caskroom/cask
     brew tap caskroom/fonts
     brew tap homebrew/homebrew-core
 
@@ -52,9 +54,11 @@ if [ `uname` = "Darwin" ]; then
 
     brew cleanup
 
-elif [ `uname` = "Linux" ]; then
-    #if [ ! `which zsh` ];then
-    # zshのインストール処理を入れたい
+elif [ $(uname) = "Linux" ]; then
+    if test -z $(which zsh); then
+        echo "installing zsh"
+        sudo apt install -y zsh
+    fi
 
     # neovim #-> brewよりさらに楽で確実に入れられる
     curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
@@ -63,25 +67,36 @@ elif [ `uname` = "Linux" ]; then
     mv nvim.appimage ~/opt/bin/nvim
 fi
 
-
-echo 'export XDG_CONFIG_HOME="~/.config"' >> ~/.zshenv
-echo 'export XDG_CONFIG_HOME="~/.config"' >> ~/.bash_profile
+echo 'export XDG_CONFIG_HOME="~/.config"' >>~/.zshenv
+echo 'export XDG_CONFIG_HOME="~/.config"' >>~/.bash_profile
 mkdir -p ~/.config
 
 #zplug
-if [ ! `which zplug` ];then
-    curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
+if [ ! $(which zplug) ]; then
+    curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
 fi
 
 #anyenv
-git clone https://github.com/riywo/anyenv ~/.anyenv
-[ ! -d $(pyenv root)/plugins/pyenv-virtualenv ] && git clone https://github.com/yyuu/pyenv-virtualenv $(pyenv root)/plugins/pyenv-virtualenv
-mkdir -p $(anyenv root)/plugins
-git clone https://github.com/znz/anyenv-update.git $(anyenv root)/plugins/anyenv-update
-#ln -s ~/.anyenv/envs/pyenv ~/.pyenv #一応
+if test -z $(which anyenv); then
+    echo "installing anyenv.."
+    git clone https://github.com/riywo/anyenv ~/.anyenv
+    export PATH="$HOME/.anyenv/bin:$PATH"
+    anyenv init
+    mkdir -p $(anyenv root)/plugins
+    git clone https://github.com/znz/anyenv-update.git $(anyenv root)/plugins/anyenv-update
+    #ln -s ~/.anyenv/envs/pyenv ~/.pyenv #一応
 
-echo 'export PATH="$HOME/.anyenv/bin:$PATH"' >> ~/.bash_profile 
-echo 'eval "$(anyenv init - --no-rehash)"' >> ~/.bash_profile
+    #一応bashの方にも入れておく
+    echo 'export PATH="$HOME/.anyenv/bin:$PATH"' >>~/.bash_profile
+    echo 'eval "$(anyenv init - --no-rehash)"' >>~/.bash_profile
+
+    if test -z $(which pyenv); then
+        echo "installing pyenv..."
+        anyenv install pyenv
+        pyenv init
+        [ ! -d $(pyenv root)/plugins/pyenv-virtualenv ] && git clone https://github.com/yyuu/pyenv-virtualenv $(pyenv root)/plugins/pyenv-virtualenv
+    fi
+fi
 
 ##pyenv (deprecated, use anyenv)
 #if [ ! `which pyenv` ];then
@@ -98,5 +113,8 @@ echo 'eval "$(anyenv init - --no-rehash)"' >> ~/.bash_profile
 
 #for tmux
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+#fonts
+zsh ./font-installer.sh
 
 #pip install neovim
