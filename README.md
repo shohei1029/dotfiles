@@ -34,7 +34,7 @@ $ explorer.exe .
 # Using GUI to continue
 ```
 WSL環境下の.ttfファイルはそのまま開けなかったので、一度Desktop等へコピーをしてからダブルクリックしてインストール。
-
+-> Qiita記事化 (https://qiita.com/aical/items/517fe263aeaa61c64d96)
 
 ### zsh
 - Shellのデフォルトに設定  

@@ -4,15 +4,6 @@ alias f='ls -F'
 alias l='ls -l'
 alias a='ls -a'
 alias lh='ls -lh'
-alias sfcx='ssh shohei@ccx01.sfc.keio.ac.jp'
-alias sfcz='ssh shohei@ccz00.sfc.keio.ac.jp'
-alias sfcw='ssh shohei@webedit.sfc.keio.ac.jp'
-alias smith1='ssh smith1'
-alias smith2='ssh smith2'
-alias smith3='ssh smith3'
-alias smith4='ssh smith4'
-alias smith5='ssh smith5'
-alias iris='ssh iris'
 alias ipynb='ipython notebook'
 alias ipnb='ipynb'
 alias jpnb='jupyter notebook'
@@ -34,7 +25,7 @@ linux*)
 esac
 
 # LANG
-#
+# localeに該当項目がないと見えにくいエラーを引き起こす
 export LANG=ja_JP.UTF-8
 case ${UID} in
 	0)
@@ -127,6 +118,9 @@ fi
 # nvim
 export XDG_CONFIG_HOME=~/.config
 
+# load user .zshrc configuration file
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
 # anyanv
 if [ -d $HOME/.anyenv ]; then
     export PATH="$HOME/.anyenv/bin:$PATH"
@@ -134,14 +128,14 @@ if [ -d $HOME/.anyenv ]; then
     #eval "$(anyenv init - --no-rehash)"
 fi
 
-#zcompile
+# zcompile for faster zshell launch
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
 fi
 
-## load user .zshrc configuration file
-[ -f ~/.zshrc.local ] && source ~/.zshrc.local
+# Iterms2 integration (macOS)
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
 ### load bash completions
 #autoload bashcompinit
 #bashcompinit
@@ -191,46 +185,11 @@ ENHANCD_HOOK_AFTER_CD='ls -GFl'
 EMOJI_CLI_FILTER=fzy:fzf:peco
 
 
-
 # fzf
 # fh - repeat history
 # functionaly same with above script. tmp
 fh() {
   print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
-}
-
-# c - browse chrome history
-#c() {
-ch() {
-  local cols sep
-  cols=$(( COLUMNS / 3 ))
-  sep='{{::}}'
-
-  # Copy History DB to circumvent the lock
-  # - See http://stackoverflow.com/questions/8936878 for the file path
-  cp -f ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
-
-  sqlite3 -separator $sep /tmp/h \
-    "select substr(title, 1, $cols), url
-     from urls order by last_visit_time desc" |
-  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\n", $1, $2}' |
-  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs open
-}
-vh() { #for vivaldi
-  local cols sep
-  cols=$(( COLUMNS / 3 ))
-  sep='{{::}}'
-
-  # Copy History DB to circumvent the lock
-  # - See http://stackoverflow.com/questions/8936878 for the file path
-  #cp -f ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
-  cp -f ~/Library/Application\ Support/Vivaldi/Default/History /tmp/h #for vivaldi
-
-  sqlite3 -separator $sep /tmp/h \
-    "select substr(title, 1, $cols), url
-     from urls order by last_visit_time desc" |
-  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\n", $1, $2}' |
-  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs open
 }
 
 # fkill - kill process
