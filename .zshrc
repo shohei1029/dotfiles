@@ -1,5 +1,5 @@
-alias ls='ls -GF'
-alias la='ls -la'
+#alias ls='ls -GF'
+#alias la='ls -la'
 alias f='ls -F'
 alias l='ls -l'
 alias a='ls -a'
@@ -61,7 +61,7 @@ zplug "zsh-users/zsh-autosuggestions"
 zplug "felixr/docker-zsh-completion"
 zplug "mollifier/anyframe"
 zplug "peco/peco", as:command, from:gh-r #functionaly same as fzf
-zplug "junegunn/fzf-bin", as:command, rename-to:"fzf", from:gh-r, use:"*darwin*amd64*"
+zplug "junegunn/fzf", as:command, from:gh-r, use:"*darwin*amd64*"
 zplug "b4b4r07/enhancd", use:init.sh
 zplug "stedolan/jq", \
     from:gh-r, \
