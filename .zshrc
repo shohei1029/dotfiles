@@ -184,6 +184,9 @@ ENHANCD_HOOK_AFTER_CD='ls -GFl'
 #emoji-cli
 EMOJI_CLI_FILTER=fzy:fzf:peco
 
+# homebrew
+export HOMEBREW_NO_AUTO_UPDATE=1
+
 
 # fzf
 # fh - repeat history
@@ -201,4 +204,5 @@ fkill() {
     kill -${1:-9} $pid
   fi
 }
+
 #Created by S.N.
