@@ -206,3 +206,6 @@ fkill() {
 }
 
 #Created by S.N.
+
+# aliases (Todo: create separate file)
+alias sshazvm='ssh -i ~/.ssh/azure-vm.pem shohei@4.236.177.141'
