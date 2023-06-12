@@ -26,6 +26,7 @@ min_deploy: ## deploy: of minimized setting files in 'min_sets' dir (by S.N.)
 	ln -sfnv $(abspath ./min_sets/.zshrc) ~/.zshrc
 	ln -sfnv $(abspath ./min_sets/.bashrc) ~/.bashrc 
 	ln -sfnv $(abspath ./min_sets/.tmux.conf) ~/.tmux.conf 
+	ln -sfnv $(abspath .env) ~/.env
 	ln -sfnv $(abspath .config/nvim) ~/.config/
 	ln -snv $(abspath bin) ~/bin
 #@$(foreach val, $(filter-out $(EXCLUSIONS), $(wildcard ./min_sets/.??*)), ln -sfnv $(abspath $(val)) $(HOME)/$(val);) #うまくいかない
