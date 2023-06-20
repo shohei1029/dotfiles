@@ -43,6 +43,9 @@ fi
 
 [ -f ~/.zplug/init.zsh ] && source ~/.zplug/init.zsh
 
+#peco, fzfにpathが通ってない問題の応急処置 (171012)
+path=($HOME/.zplug/bin(N-/) $path)
+
 ## plugins
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 ### prezto modules
@@ -62,13 +65,13 @@ zplug "zsh-users/zsh-autosuggestions"
 #zplug "zsh-users/zsh-completions" # use prezo version
 zplug "felixr/docker-zsh-completion"
 zplug "mollifier/anyframe"
-zplug "peco/peco", as:command, from:gh-r #functionaly same as fzf
-zplug "junegunn/fzf", as:command, from:gh-r, use:"*darwin*amd64*"
 zplug "b4b4r07/enhancd", use:init.sh
-zplug "stedolan/jq", \
-    from:gh-r, \
-    as:command, \
-    rename-to:"jq"
+#zplug "peco/peco", as:command, from:gh-r #functionaly same as fzf
+#zplug "junegunn/fzf", as:command, from:gh-r, use:"*linux*amd64*"
+#zplug "stedolan/jq", \
+#    from:gh-r, \
+#    as:command, \
+#    rename-to:"jq"
 #zplug "b4b4r07/emoji-cli", if:"which jq" #installed jq by homebrew
 zplug "b4b4r07/emoji-cli", \
     on:"stedolan/jq"
@@ -94,8 +97,6 @@ fi
 zplug load 
 #zplug load --verbose
 
-#peco, fzfにpathが通ってない問題の応急処置 (171012)
-path=($HOME/.zplug/bin(N-/) $path)
 
 #use prompt from prezto
 autoload -Uz promptinit
