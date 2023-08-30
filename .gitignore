@@ -1,2 +1,5 @@
 .python-version
-.config/nvim/dein
+.config/nvim/dein/.cache
+.config/nvim/dein/cache_nvim
+.config/nvim/dein/repos
+.config/nvim/dein/state_nvim.vim
