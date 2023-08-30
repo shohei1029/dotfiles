@@ -17,6 +17,13 @@ list: ## Show dot files in this repo
 deploy: ## Create symlink to home directory
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@echo ''
+	@if [ -e "$(HOME)/.config/nvim" ]; then \
+		read -p "Overwrite existing ~/.config/nvim? (y/n): " yn; \
+		case $$yn in \
+			[Yy]* ) rm -rf $(HOME)/.config/nvim;; \
+			* ) echo "Skipping ~/.config/nvim";; \
+		esac; \
+	fi
 	@$(foreach val, $(DOTFILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 	ln -sfnv $(abspath .config/nvim) ~/.config/
 
