@@ -4,6 +4,7 @@ alias brewup='brew upgrade && brew cleanup'
 alias pbcopy='clip.exe'
 
 path=($path $HOME/bin(N-/))
+export PATH="$HOME/.local/bin:$PATH"
 
 eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 eval "$(anyenv init -)"
