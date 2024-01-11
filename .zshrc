@@ -131,7 +131,9 @@ if [ -d $HOME/.anyenv ]; then
     #eval "$(anyenv init - --no-rehash)"
 fi
 
+# dotnet
 export PATH="$PATH:$HOME/.dotnet/tools"
+export DOTNET_ROOT="/home/linuxbrew/.linuxbrew/opt/dotnet/libexec"
 
 # zcompile for faster zshell launch
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
