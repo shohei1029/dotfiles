@@ -15,8 +15,10 @@ list: ## Show dot files in this repo
 	@$(foreach val, $(DOTFILES), /bin/ls -dF $(val);)
 
 deploy: ## Create symlink to home directory
+	@set -e
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@echo ''
+	@mkdir -p $(HOME)/.config
 	@if [ -e "$(HOME)/.config/nvim" ]; then \
 		read -p "Overwrite existing ~/.config/nvim? (y/n): " yn; \
 		case $$yn in \
@@ -29,6 +31,8 @@ deploy: ## Create symlink to home directory
 
 #vim, bash, zsh, tmux and bin dir (hard coding)
 min_deploy: ## deploy: of minimized setting files in 'min_sets' dir (by S.N.)
+	@set -e
+	@mkdir -p $(HOME)/.config
 	ln -sfnv $(abspath ./min_sets/.vimrc) ~/.vimrc
 	ln -sfnv $(abspath ./min_sets/.zshrc) ~/.zshrc
 	ln -sfnv $(abspath ./min_sets/.bashrc) ~/.bashrc 
