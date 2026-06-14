@@ -1,10 +1,48 @@
 # dotfiles
-for macOS or WSL (Ubuntu)
+for macOS / WSL / native Linux (Ubuntu).
 
 ## Setup
 ```sh
 $ curl -sSL https://raw.githubusercontent.com/shohei1029/dotfiles/master/install.sh | sh
 ```
+
+または手動で:
+```sh
+$ git clone https://github.com/shohei1029/dotfiles.git ~/.dotfiles
+$ cd ~/.dotfiles
+$ make install   # = update + deploy + brew + init
+```
+
+### Make targets
+
+| target | 説明 |
+| --- | --- |
+| `make deploy` | dotfilesを`$HOME`にシンボリックリンク |
+| `make brew` | `Brewfile`のパッケージを導入 |
+| `make init` | OS判定して環境セットアップ (brew/anyenv/tmux/fonts) |
+| `make install` | update→deploy→brew→initを一括実行 |
+| `make min_deploy` | `min_sets/`の軽量設定のみ配置 (サーバ等向け) |
+| `make help` | 全ターゲット一覧 |
+
+### シェル構成 (OS別自動読み込み)
+
+`.zshrc`が共通設定で、起動時にOSを判定して対応するファイルを自動sourceする。
+
+| OS | 判定 | 読み込まれるファイル |
+| --- | --- | --- |
+| macOS | `uname -s` = Darwin | `.zshrc.mac` |
+| WSL | `/proc/version`に`microsoft`/`wsl` | `.zshrc.wsl` |
+| native Linux | それ以外のLinux | `.zshrc.linux` |
+
+最後に`~/.zshrc.local`（git管理外のマシン固有設定）があれば読み込む。
+
+### Secrets (.env)
+
+APIキー等は`.env`に置く（**git管理外**）。テンプレートをコピーして利用:
+```sh
+$ cp .env.example .env   # 値を埋める
+```
+> 注: 過去に `.env` を平文でコミットしていた。該当キーは失効済み。git履歴には残っているため、流用はできない。
 
 ## Misc.
 
@@ -24,7 +62,7 @@ GitHubのmonaspace系もよさそう
 - Shellのデフォルトに設定  
 `$ chsh -s /bin/zsh`
 - Updating  
-`git pull && git submodule update --init --recursive`
+`make update`
 
 #### プラグイン管理 (antidote)
 

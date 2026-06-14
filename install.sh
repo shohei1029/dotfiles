@@ -9,7 +9,7 @@ if test -n $(which git); then
 # 使えない場合は curl か wget を使用する
 elif test -n $(which curl) || test -n $(which wget); then
   if test -n $(which curl); then
-    curl -sSL "https://github.com/shohei1029dotfiles/archive/master.tar.gz" -o $DOTPATH
+    curl -sSL "https://github.com/shohei1029/dotfiles/archive/master.tar.gz" -o $DOTPATH
   elif test -n $(which wget); then
     wget -O - "https://github.com/shohei1029/dotfiles/archive/master.tar.gz"
   fi | tar zxv
@@ -40,8 +40,8 @@ if test -z $(which make); then
   fi
 fi
 
-# 移動できたらmakeで実行する
-make init
+# 移動できたら deploy + brew + init をまとめて実行する
+make install
 
 # 終了
 exit 0

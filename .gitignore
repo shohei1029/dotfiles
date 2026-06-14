@@ -1,5 +1,8 @@
 .python-version
 
+# secrets — use .env.example as the template
+.env
+
 # antidote (plugin manager): cloned plugins and generated bundle
 .antidote/
 .zsh_plugins.zsh

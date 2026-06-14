@@ -1,0 +1,3 @@
+#!/bin/bash
+# DevBar CLI wrapper
+exec "/Applications/devbar.app/Contents/MacOS/devbar" "$@"

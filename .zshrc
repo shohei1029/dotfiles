@@ -80,7 +80,24 @@ fi
 # nvim
 export XDG_CONFIG_HOME=~/.config
 
-# load user .zshrc configuration file
+# Detect platform and load the matching OS-specific config.
+#   mac   -> .zshrc.mac
+#   wsl   -> .zshrc.wsl   (WSL is Linux but needs Windows interop tweaks)
+#   linux -> .zshrc.linux (native Linux)
+case "$(uname -s)" in
+    Darwin) _os=mac ;;
+    Linux)
+        if grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null; then
+            _os=wsl
+        else
+            _os=linux
+        fi
+        ;;
+esac
+[ -n "${_os}" ] && [ -f ~/.zshrc.${_os} ] && source ~/.zshrc.${_os}
+unset _os
+
+# load machine-local (untracked) overrides last
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
 # anyanv
@@ -89,10 +106,6 @@ if [ -d $HOME/.anyenv ]; then
     eval "$(anyenv init - --no-rehash zsh)"
     #eval "$(anyenv init - --no-rehash)"
 fi
-
-# dotnet
-export PATH="$PATH:$HOME/.dotnet/tools"
-export DOTNET_ROOT="/home/linuxbrew/.linuxbrew/opt/dotnet/libexec"
 
 # zcompile for faster zshell launch
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
@@ -172,9 +185,3 @@ fkill() {
 }
 
 #Created by S.N.
-
-# aliases (Todo: create separate file)
-alias sshazvm='ssh -i ~/.ssh/azure-vm.pem shohei@4.236.177.141'
-# devbar-managed-start
-export NODE_EXTRA_CA_CERTS="$HOME/.devbar/certs/corporate-ca-bundle.pem"
-# devbar-managed-end
