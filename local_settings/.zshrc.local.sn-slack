@@ -1,9 +1,0 @@
-alias emacs='sl'
-alias brewup='brew upgrade && brew cleanup'
-
-alias pbcopy='clip.exe'
-
-path=($path $HOME/bin(N-/))
-
-eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-eval "$(anyenv init -)"
