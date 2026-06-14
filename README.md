@@ -15,26 +15,13 @@ $ curl -sSL https://raw.githubusercontent.com/shohei1029/dotfiles/master/install
 `git clone https://github.com/rickhanlonii/Solarized-Darcula/`
 
 ### powerline対応のフォント (Ricty)利用準備
-#### macOS
+Nerd Font対応フォントであればPowerlineで利用する記号も含まれている
 ```sh
-$ brew tap sanemat/font
-$ brew install --powerline --vim-powerline ricty
-$ cp -f /usr/local/Cellar/ricty/3.2.4/share/fonts/Ricty*.ttf ~/Library/Fonts/
-$ fc-cache -vf
- #Rictyを指定
+brew install font-hackgen-nerd
 ```
-2020.05.17, brew install options might be changed to `brew reinstall --with-powerline ricty`.
+iTerm3設定で`HackGen Console NF`を指定
 
-#### Windows (WSL2)
-```sh
-$ brew tap sanemat/font
-$ brew install --with-powerline ricty
-$ cd /home/linuxbrew/.linuxbrew/opt/ricty/share/fonts/
-$ explorer.exe .
-# Using GUI to continue
-```
-WSL環境下の.ttfファイルはそのまま開けなかったので、一度Desktop等へコピーをしてからダブルクリックしてインストール。
--> Qiita記事化 (https://qiita.com/aical/items/517fe263aeaa61c64d96)
+GitHubのmonaspace系もよさそう
 
 ### zsh
 - Shellのデフォルトに設定  
