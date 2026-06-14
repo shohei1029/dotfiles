@@ -8,7 +8,6 @@ alias ipynb='ipython notebook'
 alias ipnb='ipynb'
 alias jpnb='jupyter notebook'
 alias nv='nvim'
-alias vtop="vtop --theme seti" #brewもよかった
 
 
 case "${OSTYPE}" in 
@@ -80,45 +79,11 @@ fi
 # nvim
 export XDG_CONFIG_HOME=~/.config
 
-# Detect platform and load the matching OS-specific config.
-#   mac   -> .zshrc.mac
-#   wsl   -> .zshrc.wsl   (WSL is Linux but needs Windows interop tweaks)
-#   linux -> .zshrc.linux (native Linux)
-case "$(uname -s)" in
-    Darwin) _os=mac ;;
-    Linux)
-        if grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null; then
-            _os=wsl
-        else
-            _os=linux
-        fi
-        ;;
-esac
-[ -n "${_os}" ] && [ -f ~/.zshrc.${_os} ] && source ~/.zshrc.${_os}
-unset _os
-
-# load machine-local (untracked) overrides last
-[ -f ~/.zshrc.local ] && source ~/.zshrc.local
-
-# anyanv
-if [ -d $HOME/.anyenv ]; then
-    export PATH="$HOME/.anyenv/bin:$PATH"
-    eval "$(anyenv init - --no-rehash zsh)"
-    #eval "$(anyenv init - --no-rehash)"
-fi
 
 # zcompile for faster zshell launch
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
 fi
-
-# Iterms2 integration (macOS)
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-### load bash completions
-#autoload bashcompinit
-#bashcompinit
-#[ -f ~/.bash_completion ] && source ~/.bash_completion
 
 ### Command history configuration (overwrite a part of prezto:history module settings)
 HISTFILE=~/.zsh_history
@@ -183,5 +148,25 @@ fkill() {
     kill -${1:-9} $pid
   fi
 }
+
+# Detect platform and load the matching OS-specific config.
+#   mac   -> .zshrc.mac
+#   wsl   -> .zshrc.wsl   (WSL is Linux but needs Windows interop tweaks)
+#   linux -> .zshrc.linux (native Linux)
+case "$(uname -s)" in
+    Darwin) _os=mac ;;
+    Linux)
+        if grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null; then
+            _os=wsl
+        else
+            _os=linux
+        fi
+        ;;
+esac
+[ -n "${_os}" ] && [ -f ~/.zshrc.${_os} ] && source ~/.zshrc.${_os}
+unset _os
+
+# load machine-local (untracked) overrides last
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
 #Created by S.N.
