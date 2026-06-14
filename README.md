@@ -1,5 +1,5 @@
 # dotfiles
-for macOS or Ubuntu
+for macOS or WSL (Ubuntu)
 
 ## Setup
 ```sh
@@ -11,7 +11,7 @@ $ curl -sSL https://raw.githubusercontent.com/shohei1029/dotfiles/master/install
 ### iTerm2
 `git clone https://github.com/rickhanlonii/Solarized-Darcula/`
 
-### powerline対応のフォント (Ricty)利用準備
+### Powerline対応のフォント利用準備
 Nerd Font対応フォントであればPowerlineで利用する記号も含まれている
 ```sh
 brew install font-hackgen-nerd
