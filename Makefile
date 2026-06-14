@@ -51,7 +51,7 @@ brew: ## Install packages from Brewfile
 update: ## Fetch changes for this repo
 	git -C $(DOTPATH) pull origin $(BRANCH)
 
-install: update deploy brew init ## Run make update, deploy, brew, init
+install: update deploy init ## Run make update, deploy, init (init installs brew + runs brew bundle)
 	@exec $$SHELL
 
 clean: ## Remove the dot files
