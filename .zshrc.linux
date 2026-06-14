@@ -1,0 +1,15 @@
+# .zshrc.linux — native Linux specific settings.
+# Loaded automatically from .zshrc when running on native Linux (non-WSL).
+# WSL has its own .zshrc.wsl; macOS has .zshrc.mac.
+
+alias brewup='brew upgrade && brew cleanup'
+
+# Linuxbrew (Homebrew on Linux)
+if [ -d /home/linuxbrew/.linuxbrew ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [ -d "$HOME/.linuxbrew" ]; then
+    eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
+fi
+
+export PATH="$HOME/.local/bin:$PATH"
+path=($path $HOME/bin(N-/))

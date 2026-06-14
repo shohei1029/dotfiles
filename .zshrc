@@ -1,18 +1,9 @@
-alias ls='ls -GF'
-alias la='ls -la'
+#alias ls='ls -GF'
+#alias la='ls -la'
 alias f='ls -F'
 alias l='ls -l'
 alias a='ls -a'
 alias lh='ls -lh'
-alias sfcx='ssh shohei@ccx01.sfc.keio.ac.jp'
-alias sfcz='ssh shohei@ccz00.sfc.keio.ac.jp'
-alias sfcw='ssh shohei@webedit.sfc.keio.ac.jp'
-alias smith1='ssh smith1'
-alias smith2='ssh smith2'
-alias smith3='ssh smith3'
-alias smith4='ssh smith4'
-alias smith5='ssh smith5'
-alias iris='ssh iris'
 alias ipynb='ipython notebook'
 alias ipnb='ipynb'
 alias jpnb='jupyter notebook'
@@ -34,8 +25,10 @@ linux*)
 esac
 
 # LANG
-#
-export LANG=ja_JP.UTF-8
+# localeに該当項目がないと見えにくいエラーを引き起こす
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 case ${UID} in
 	0)
 		LANG=C
@@ -43,66 +36,26 @@ case ${UID} in
 esac
 
 
-# zplug
-if [[ ! -d ~/.zplug ]];then
-    curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
-fi
+# antidote (plugin manager) — replaces zplug.
+# Plugin list lives in ~/.zsh_plugins.txt; a static bundle is cached for fast startup.
+zsh_plugins=${ZDOTDIR:-$HOME}/.zsh_plugins
+if (( ${+commands[brew]} )); then
+    source "$(brew --prefix)/share/antidote/antidote.zsh"
 
-[ -f ~/.zplug/init.zsh ] && source ~/.zplug/init.zsh
+    # Regenerate the static bundle whenever the plugin list changes.
+    if [[ ! ${zsh_plugins}.zsh -nt ${zsh_plugins}.txt ]]; then
+        antidote bundle <${zsh_plugins}.txt >| ${zsh_plugins}.zsh
+    fi
+    source ${zsh_plugins}.zsh
 
-## plugins
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-### prezto modules
-zplug "modules/environment", from:prezto #Sets general shell options and defines environment variables.
-#zplug "modules/history", from:prezto #Sets history options and defines history aliases.
-zplug "modules/directory", from:prezto #Sets directory options and defines directory aliases.
-zplug "modules/spectrum", from:prezto #Provides for easier use of 256 colors and effects.
-#zplug "modules/utility", from:prezto #Defines general aliases and functions.
-zplug "modules/completion", from:prezto #Loads and configures tab completion and provides additional completions from the zsh-completions project.
-zplug "modules/git", from:prezto
-zplug "modules/prompt", from:prezto
-#zplug "sorin-ionescu/prezto" #don't use this because now we have from:prezto
-
-zplug "zsh-users/zsh-syntax-highlighting", defer:2 #load this before load zsh-history-substring-search
-zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zsh-autosuggestions"
-#zplug "zsh-users/zsh-completions" # use prezo version
-zplug "felixr/docker-zsh-completion"
-zplug "mollifier/anyframe"
-zplug "peco/peco", as:command, from:gh-r #functionaly same as fzf
-zplug "junegunn/fzf-bin", as:command, rename-to:"fzf", from:gh-r, use:"*darwin*amd64*"
-zplug "b4b4r07/enhancd", use:init.sh
-zplug "stedolan/jq", \
-    from:gh-r, \
-    as:command, \
-    rename-to:"jq"
-#zplug "b4b4r07/emoji-cli", if:"which jq" #installed jq by homebrew
-zplug "b4b4r07/emoji-cli", \
-    on:"stedolan/jq"
- # type ^s to launch
-#zplug "shohei1029/xiang", as:command, use:"bin/*"
-zplug "shohei1029/xiang" # prompt seraph
-##
-
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
+    # Autoload prezto module functions (git-info, etc.); antidote loads each
+    # module's root but not its functions/ subdir like prezto's own init.zsh does.
+    if [[ -n "$ZPREZTODIR" ]]; then
+        fpath=(${ZPREZTODIR}/modules/*/functions(/FN) $fpath)
+        autoload -Uz ${ZPREZTODIR}/modules/*/functions/^([_.]*|prompt_*_setup|README*)(-.N:t)
     fi
 fi
 
-# zplug issue #374, #480
-if [ -f "$_zplug_lock" ]; then
-    rm "$_zplug_lock"
-fi
-
-# Then, source plugins and add commands to $PATH
-zplug load 
-#zplug load --verbose
-
-#peco, fzfにpathが通ってない問題の応急処置 (171012)
-path=($HOME/.zplug/bin(N-/) $path)
 
 #use prompt from prezto
 autoload -Uz promptinit
@@ -127,6 +80,26 @@ fi
 # nvim
 export XDG_CONFIG_HOME=~/.config
 
+# Detect platform and load the matching OS-specific config.
+#   mac   -> .zshrc.mac
+#   wsl   -> .zshrc.wsl   (WSL is Linux but needs Windows interop tweaks)
+#   linux -> .zshrc.linux (native Linux)
+case "$(uname -s)" in
+    Darwin) _os=mac ;;
+    Linux)
+        if grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null; then
+            _os=wsl
+        else
+            _os=linux
+        fi
+        ;;
+esac
+[ -n "${_os}" ] && [ -f ~/.zshrc.${_os} ] && source ~/.zshrc.${_os}
+unset _os
+
+# load machine-local (untracked) overrides last
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
 # anyanv
 if [ -d $HOME/.anyenv ]; then
     export PATH="$HOME/.anyenv/bin:$PATH"
@@ -134,14 +107,14 @@ if [ -d $HOME/.anyenv ]; then
     #eval "$(anyenv init - --no-rehash)"
 fi
 
-#zcompile
+# zcompile for faster zshell launch
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
 fi
 
-## load user .zshrc configuration file
-[ -f ~/.zshrc.local ] && source ~/.zshrc.local
+# Iterms2 integration (macOS)
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
 ### load bash completions
 #autoload bashcompinit
 #bashcompinit
@@ -190,6 +163,8 @@ ENHANCD_HOOK_AFTER_CD='ls -GFl'
 #emoji-cli
 EMOJI_CLI_FILTER=fzy:fzf:peco
 
+# homebrew
+export HOMEBREW_NO_AUTO_UPDATE=1
 
 
 # fzf
@@ -197,40 +172,6 @@ EMOJI_CLI_FILTER=fzy:fzf:peco
 # functionaly same with above script. tmp
 fh() {
   print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
-}
-
-# c - browse chrome history
-#c() {
-ch() {
-  local cols sep
-  cols=$(( COLUMNS / 3 ))
-  sep='{{::}}'
-
-  # Copy History DB to circumvent the lock
-  # - See http://stackoverflow.com/questions/8936878 for the file path
-  cp -f ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
-
-  sqlite3 -separator $sep /tmp/h \
-    "select substr(title, 1, $cols), url
-     from urls order by last_visit_time desc" |
-  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\n", $1, $2}' |
-  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs open
-}
-vh() { #for vivaldi
-  local cols sep
-  cols=$(( COLUMNS / 3 ))
-  sep='{{::}}'
-
-  # Copy History DB to circumvent the lock
-  # - See http://stackoverflow.com/questions/8936878 for the file path
-  #cp -f ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
-  cp -f ~/Library/Application\ Support/Vivaldi/Default/History /tmp/h #for vivaldi
-
-  sqlite3 -separator $sep /tmp/h \
-    "select substr(title, 1, $cols), url
-     from urls order by last_visit_time desc" |
-  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\n", $1, $2}' |
-  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs open
 }
 
 # fkill - kill process
@@ -242,4 +183,5 @@ fkill() {
     kill -${1:-9} $pid
   fi
 }
+
 #Created by S.N.

@@ -1,0 +1,29 @@
+# antidote plugins list (replaces the old zplug config)
+# Regenerate the static bundle automatically from .zshrc.
+
+# Prezto bridge — must be loaded before any prezto module.
+getantidote/use-prezto
+
+# Prezto modules (order follows dependencies).
+# helper is required by git/prompt and other modules; load it first.
+sorin-ionescu/prezto path:modules/helper
+sorin-ionescu/prezto path:modules/environment
+sorin-ionescu/prezto path:modules/directory
+sorin-ionescu/prezto path:modules/spectrum
+sorin-ionescu/prezto path:modules/completion
+sorin-ionescu/prezto path:modules/git
+sorin-ionescu/prezto path:modules/prompt
+
+# seraph prompt theme (provides functions/prompt_seraph_setup).
+shohei1029/xiang kind:fpath path:functions
+
+# completions / utilities
+felixr/docker-zsh-completion
+mollifier/anyframe
+b4b4r07/enhancd path:init.sh
+b4b4r07/emoji-cli
+
+# Load last. syntax-highlighting must come before history-substring-search.
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-syntax-highlighting
+zsh-users/zsh-history-substring-search

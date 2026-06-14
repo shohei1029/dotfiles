@@ -1,1 +1,13 @@
 .python-version
+
+# secrets — use .env.example as the template
+.env
+
+# antidote (plugin manager): cloned plugins and generated bundle
+.antidote/
+.zsh_plugins.zsh
+
+.config/nvim/dein/.cache
+.config/nvim/dein/cache_nvim
+.config/nvim/dein/repos
+.config/nvim/dein/state_nvim.vim
