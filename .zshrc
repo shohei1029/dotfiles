@@ -9,7 +9,7 @@ alias ipnb='ipynb'
 alias jpnb='jupyter notebook'
 alias nv='nvim'
 alias emacs='sl'
-alias brewup='brew upgrade && brew cleanup'
+alias brewup='brew update && brew upgrade && brew cleanup'
 
 case "${OSTYPE}" in 
 darwin*)
