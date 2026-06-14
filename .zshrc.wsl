@@ -5,6 +5,6 @@ alias pbcopy='clip.exe'
 
 path=($path $HOME/bin(N-/))
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="/opt/homebrew/bin:$PATH"
 
-eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+# Linuxbrew (Homebrew on Linux) の初期化は .zshrc 本体で
+# クロスプラットフォームに行う (antidote より前に PATH へ載せる必要があるため)。
