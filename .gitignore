@@ -3,6 +3,9 @@
 # secrets — use .env.example as the template
 .env
 
+# machine-local zsh overrides (sourced last by .zshrc)
+.zshrc.local
+
 # antidote (plugin manager): cloned plugins and generated bundle
 .antidote/
 .zsh_plugins.zsh
