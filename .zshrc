@@ -82,7 +82,9 @@ zstyle ':prezto:module:prompt' pwd-length 'long' #do not abbreviate working dire
 # other settings
 
 #path
-path=(~/opt/bin(N-/) $path)
+# ~/.local/bin: claude などユーザーローカルにインストールされるツール置き場。
+# ~/bin: dotfiles 同梱スクリプト。全プラットフォーム共通で通す。
+path=(~/.local/bin(N-/) ~/bin(N-/) ~/opt/bin(N-/) $path)
 #path=($path ~/opt/bin(N-/))
 manpath=(~/opt/share/man(N-/) $manpath)
 
