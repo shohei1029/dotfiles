@@ -36,66 +36,25 @@ case ${UID} in
 esac
 
 
-# zplug
-if [[ ! -d ~/.zplug ]];then
-    curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
-fi
+# antidote (plugin manager) — replaces zplug.
+# Plugin list lives in ~/.zsh_plugins.txt; a static bundle is cached for fast startup.
+zsh_plugins=${ZDOTDIR:-$HOME}/.zsh_plugins
+if (( ${+commands[brew]} )); then
+    source "$(brew --prefix)/share/antidote/antidote.zsh"
 
-[ -f ~/.zplug/init.zsh ] && source ~/.zplug/init.zsh
+    # Regenerate the static bundle whenever the plugin list changes.
+    if [[ ! ${zsh_plugins}.zsh -nt ${zsh_plugins}.txt ]]; then
+        antidote bundle <${zsh_plugins}.txt >| ${zsh_plugins}.zsh
+    fi
+    source ${zsh_plugins}.zsh
 
-#peco, fzfにpathが通ってない問題の応急処置 (171012)
-path=($HOME/.zplug/bin(N-/) $path)
-
-## plugins
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-### prezto modules
-zplug "modules/environment", from:prezto #Sets general shell options and defines environment variables.
-#zplug "modules/history", from:prezto #Sets history options and defines history aliases.
-zplug "modules/directory", from:prezto #Sets directory options and defines directory aliases.
-zplug "modules/spectrum", from:prezto #Provides for easier use of 256 colors and effects.
-#zplug "modules/utility", from:prezto #Defines general aliases and functions.
-zplug "modules/completion", from:prezto #Loads and configures tab completion and provides additional completions from the zsh-completions project.
-zplug "modules/git", from:prezto
-zplug "modules/prompt", from:prezto
-#zplug "sorin-ionescu/prezto" #don't use this because now we have from:prezto
-
-zplug "zsh-users/zsh-syntax-highlighting", defer:2 #load this before load zsh-history-substring-search
-zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zsh-autosuggestions"
-#zplug "zsh-users/zsh-completions" # use prezo version
-zplug "felixr/docker-zsh-completion"
-zplug "mollifier/anyframe"
-zplug "b4b4r07/enhancd", use:init.sh
-#zplug "peco/peco", as:command, from:gh-r #functionaly same as fzf
-#zplug "junegunn/fzf", as:command, from:gh-r, use:"*linux*amd64*"
-#zplug "stedolan/jq", \
-#    from:gh-r, \
-#    as:command, \
-#    rename-to:"jq"
-#zplug "b4b4r07/emoji-cli", if:"which jq" #installed jq by homebrew
-zplug "b4b4r07/emoji-cli", \
-    on:"stedolan/jq"
- # type ^s to launch
-#zplug "shohei1029/xiang", as:command, use:"bin/*"
-zplug "shohei1029/xiang" # prompt seraph
-##
-
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
+    # Autoload prezto module functions (git-info, etc.); antidote loads each
+    # module's root but not its functions/ subdir like prezto's own init.zsh does.
+    if [[ -n "$ZPREZTODIR" ]]; then
+        fpath=(${ZPREZTODIR}/modules/*/functions(/FN) $fpath)
+        autoload -Uz ${ZPREZTODIR}/modules/*/functions/^([_.]*|prompt_*_setup|README*)(-.N:t)
     fi
 fi
-
-# zplug issue #374, #480
-if [ -f "$_zplug_lock" ]; then
-    rm "$_zplug_lock"
-fi
-
-# Then, source plugins and add commands to $PATH
-zplug load 
-#zplug load --verbose
 
 
 #use prompt from prezto
@@ -216,3 +175,6 @@ fkill() {
 
 # aliases (Todo: create separate file)
 alias sshazvm='ssh -i ~/.ssh/azure-vm.pem shohei@4.236.177.141'
+# devbar-managed-start
+export NODE_EXTRA_CA_CERTS="$HOME/.devbar/certs/corporate-ca-bundle.pem"
+# devbar-managed-end
