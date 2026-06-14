@@ -3,14 +3,14 @@ for macOS / WSL / native Linux (Ubuntu).
 
 ## Setup
 ```sh
-$ curl -sSL https://raw.githubusercontent.com/shohei1029/dotfiles/master/install.sh | sh
+$ curl -sSL https://raw.githubusercontent.com/shohei1029/dotfiles/main/install.sh | sh
 ```
 
 または手動で:
 ```sh
 $ git clone https://github.com/shohei1029/dotfiles.git ~/.dotfiles
 $ cd ~/.dotfiles
-$ make install   # = update + deploy + brew + init
+$ make install   # = update + deploy + init
 ```
 
 ### Make targets
@@ -18,9 +18,9 @@ $ make install   # = update + deploy + brew + init
 | target | 説明 |
 | --- | --- |
 | `make deploy` | dotfilesを`$HOME`にシンボリックリンク |
-| `make brew` | `Brewfile`のパッケージを導入 |
-| `make init` | OS判定して環境セットアップ (brew/anyenv/tmux/fonts) |
-| `make install` | update→deploy→brew→initを一括実行 |
+| `make brew` | `Brewfile`のパッケージを導入 (brew導入済みの環境向け) |
+| `make init` | OS判定して環境セットアップ (Homebrew導入 + brew bundle + anyenv/tmux/fonts) |
+| `make install` | update→deploy→initを一括実行 |
 | `make min_deploy` | `min_sets/`の軽量設定のみ配置 (サーバ等向け) |
 | `make help` | 全ターゲット一覧 |
 
@@ -42,7 +42,6 @@ APIキー等は`.env`に置く（**git管理外**）。テンプレートをコ�
 ```sh
 $ cp .env.example .env   # 値を埋める
 ```
-> 注: 過去に `.env` を平文でコミットしていた。該当キーは失効済み。git履歴には残っているため、流用はできない。
 
 ## Misc.
 
