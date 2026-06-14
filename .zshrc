@@ -35,6 +35,21 @@ case ${UID} in
 esac
 
 
+# Homebrew / Linuxbrew
+# brew shellenv は Homebrew のパスを PATH 先頭に prepend する。
+#   - macOS: path_helper (/etc/zprofile) が /usr/bin を先に並べ、/opt/homebrew/bin が
+#            後ろになる ("brew doctor" が警告する状態) のを直す。
+#   - WSL/Linux: path_helper が無いので brew を PATH に載せる役割も兼ねる。
+# 下の antidote ブロックは brew を使うため、必ずそれより前で実行する。
+for _brew in /opt/homebrew/bin/brew /usr/local/bin/brew \
+             /home/linuxbrew/.linuxbrew/bin/brew "$HOME/.linuxbrew/bin/brew"; do
+    if [ -x "$_brew" ]; then
+        eval "$("$_brew" shellenv)"
+        break
+    fi
+done
+unset _brew
+
 # antidote (plugin manager) — replaces zplug.
 # Plugin list lives in ~/.zsh_plugins.txt; a static bundle is cached for fast startup.
 zsh_plugins=${ZDOTDIR:-$HOME}/.zsh_plugins

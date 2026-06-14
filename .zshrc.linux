@@ -4,12 +4,8 @@
 
 alias brewup='brew upgrade && brew cleanup'
 
-# Linuxbrew (Homebrew on Linux)
-if [ -d /home/linuxbrew/.linuxbrew ]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-elif [ -d "$HOME/.linuxbrew" ]; then
-    eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
-fi
+# Linuxbrew (Homebrew on Linux) の初期化は .zshrc 本体で
+# クロスプラットフォームに行う (antidote より前に PATH へ載せる必要があるため)。
 
 export PATH="$HOME/.local/bin:$PATH"
 path=($path $HOME/bin(N-/))
