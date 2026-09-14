@@ -31,5 +31,8 @@ brew "cowsay"
 brew "sl"    # `emacs` alias のお遊び
 
 ## Casks ---------------------------------------------------------------------
-cask "clipy"             # クリップボード履歴
-cask "font-hackgen-nerd" # 端末フォント (Nerd Font)
+# cask は macOS 専用 (Linuxbrew には無い) ので mac 判定で囲む。
+if OS.mac?
+  cask "clipy"             # クリップボード履歴
+  cask "font-hackgen-nerd" # 端末フォント (Nerd Font)
+end

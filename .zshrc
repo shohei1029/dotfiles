@@ -26,9 +26,9 @@ esac
 
 # LANG
 # localeに該当項目がないと見えにくいエラーを引き起こす
-export LANG=en_US.UTF-8
-export LANGUAGE=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
+export LANG=ja_JP.UTF-8
+export LANGUAGE=ja_JP.UTF-8
+export LC_ALL=ja_JP.UTF-8
 case ${UID} in
 	0)
 		LANG=C
@@ -188,3 +188,6 @@ unset _os
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
 #Created by S.N.
+# devbar-managed-start
+export NODE_EXTRA_CA_CERTS="$HOME/.devbar/certs/corporate-ca-bundle.pem"
+# devbar-managed-end

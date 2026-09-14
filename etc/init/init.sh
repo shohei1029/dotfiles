@@ -6,42 +6,43 @@ set -e
 
 DOTPATH="${DOTPATH:-$HOME/.dotfiles}"
 
-if [ "$(uname)" = "Darwin" ]; then
-    # --- macOS ---
-    if ! command -v brew >/dev/null 2>&1; then
-        echo "installing Homebrew..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    fi
+# Linux/WSL: install zsh first (a login-shell candidate) before Homebrew.
+if [ "$(uname)" = "Linux" ] && ! command -v zsh >/dev/null 2>&1; then
+    echo "installing zsh..."
+    sudo apt update && sudo apt install -y zsh
+fi
 
+# Homebrew — the official installer covers both macOS and Linux, so a single
+# path works everywhere and the same Brewfile applies.
+if ! command -v brew >/dev/null 2>&1; then
+    echo "installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# A fresh install isn't on PATH yet; load brew's env from the known prefixes so
+# `brew bundle` below works on the first run (.zshrc does this for interactive
+# shells). Covers Apple Silicon, Intel mac, and Linuxbrew.
+if ! command -v brew >/dev/null 2>&1; then
+    for _brew in /opt/homebrew/bin/brew /usr/local/bin/brew \
+                 /home/linuxbrew/.linuxbrew/bin/brew "$HOME/.linuxbrew/bin/brew"; do
+        [ -x "$_brew" ] && eval "$("$_brew" shellenv)" && break
+    done
+    unset _brew
+fi
+
+if command -v brew >/dev/null 2>&1; then
     echo "installing packages from Brewfile..."
     brew bundle --file="$DOTPATH/Brewfile"
+fi
 
-elif [ "$(uname)" = "Linux" ]; then
-    # --- Linux / WSL ---
-    if ! command -v zsh >/dev/null 2>&1; then
-        echo "installing zsh..."
-        sudo apt update && sudo apt install -y zsh
-    fi
-
-    # Linuxbrew (so the same Brewfile works as on macOS).
-    if ! command -v brew >/dev/null 2>&1; then
-        echo "installing Linuxbrew..."
-        bash "$DOTPATH/etc/init/install_linuxbrew.sh"
-    fi
-
-    if command -v brew >/dev/null 2>&1; then
-        echo "installing packages from Brewfile..."
-        brew bundle --file="$DOTPATH/Brewfile"
-    fi
-
-    # neovim: AppImage is the simplest, most reliable route on Linux.
-    if ! command -v nvim >/dev/null 2>&1; then
-        echo "installing neovim..."
-        curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
-        chmod u+x nvim.appimage
-        mkdir -p ~/opt/bin
-        mv nvim.appimage ~/opt/bin/nvim
-    fi
+# neovim on Linux: AppImage is the simplest, most reliable route (macOS gets
+# neovim from the Brewfile).
+if [ "$(uname)" = "Linux" ] && ! command -v nvim >/dev/null 2>&1; then
+    echo "installing neovim..."
+    curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
+    chmod u+x nvim.appimage
+    mkdir -p ~/opt/bin
+    mv nvim.appimage ~/opt/bin/nvim
 fi
 
 mkdir -p ~/.config
@@ -59,9 +60,6 @@ fi
 # tmux plugin manager
 [ -d ~/.tmux/plugins/tpm ] || git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-# Powerline / Nerd fonts
-if [ -f "$DOTPATH/etc/init/font-installer.sh" ]; then
-    zsh "$DOTPATH/etc/init/font-installer.sh"
-fi
+# Nerd font (macOS) comes from the Brewfile cask (font-hackgen-nerd).
 
 echo "init done."
