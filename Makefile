@@ -1,7 +1,7 @@
 DOTPATH    := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 BRANCH     := $(shell git -C $(DOTPATH) rev-parse --abbrev-ref HEAD)
 CANDIDATES := $(wildcard .??*) bin
-EXCLUSIONS := .DS_Store .git .gitmodules .gitignore .travis.yml .config .env .env.example
+EXCLUSIONS := .DS_Store .git .gitmodules .gitignore .travis.yml .config .ssh .env .env.example
 DOTFILES   := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
 
 .DEFAULT_GOAL := help
@@ -29,6 +29,12 @@ deploy: ## Create symlink to home directory
 	fi
 	@$(foreach val, $(DOTFILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 	ln -sfnv $(abspath .config/nvim) ~/.config/
+	ln -sfnv $(abspath .config/git) ~/.config/
+	ln -sfnv $(abspath .config/btop) ~/.config/
+	@mkdir -p $(HOME)/.config/karabiner
+	ln -sfnv $(abspath .config/karabiner/karabiner.json) ~/.config/karabiner/karabiner.json
+	@mkdir -p $(HOME)/.ssh && chmod 700 $(HOME)/.ssh
+	ln -sfnv $(abspath .ssh/config) ~/.ssh/config
 
 #vim, bash, zsh, tmux and bin dir (hard coding)
 min_deploy: ## deploy: of minimized setting files in 'min_sets' dir (by S.N.)
