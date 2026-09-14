@@ -1,3 +1,6 @@
+# macOS
+.DS_Store
+
 .python-version
 
 # secrets — use .env.example as the template
