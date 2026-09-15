@@ -17,9 +17,9 @@ $ make install   # = update + deploy + init
 
 | target | 説明 |
 | --- | --- |
-| `make deploy` | dotfilesを`$HOME`にシンボリックリンク |
+| `make deploy` | dotfilesを`$HOME`にシンボリックリンク (`.zshrc`/`.bashrc`はスタブ生成) |
 | `make brew` | `Brewfile`のパッケージを導入 (brew導入済みの環境向け) |
-| `make init` | OS判定して環境セットアップ (Homebrew導入 + brew bundle + anyenv/tmux/fonts) |
+| `make init` | 環境セットアップ (Homebrew導入 + brew bundle + anyenv/tmux) |
 | `make install` | update→deploy→initを一括実行 |
 | `make min_deploy` | `min_sets/`の軽量設定のみ配置 (サーバ等向け) |
 | `make help` | 全ターゲット一覧 |
@@ -34,7 +34,13 @@ $ make install   # = update + deploy + init
 | WSL | `/proc/version`に`microsoft`/`wsl` | `.zshrc.wsl` |
 | native Linux | それ以外のLinux | `.zshrc.linux` |
 
-最後に`~/.zshrc.local`（git管理外のマシン固有設定）があれば読み込む。
+最後に`~/.zshrc.local`（git管理外のマシン固有設定）があれば読み込む。bashも
+同様に`~/.bashrc.local`を読み込む。
+
+> **スタブ方式**: `.zshrc`/`.bashrc`はシンボリックリンクではなく、`$HOME`上に
+> repo設定を`source`するだけの小さな実ファイル（スタブ）として配置される。
+> ツールが`~/.zshrc`等へ自動追記（`>>`）してもリンク越しにrepoが汚れず、追記は
+> スタブ側に残る。マシン固有の設定は`~/.zshrc.local` / `~/.bashrc.local`へ。
 
 ### Secrets (.env)
 
@@ -48,12 +54,9 @@ $ cp .env.example .env   # 値を埋める
 ### iTerm2
 `git clone https://github.com/rickhanlonii/Solarized-Darcula/`
 
-### Powerline対応のフォント利用準備
-Nerd Font対応フォントであればPowerlineで利用する記号も含まれている
-```sh
-brew install font-hackgen-nerd
-```
-iTerm3設定で`HackGen Console NF`を指定
+### フォント
+`font-hackgen-nerd`（Nerd Font）は`Brewfile`のcaskで導入される（macOSのみ）。
+Nerd FontにはPowerlineの記号も含まれる。iTerm2設定で`HackGen Console NF`を指定。
 
 GitHubのmonaspace系もよさそう
 
