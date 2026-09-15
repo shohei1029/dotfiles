@@ -98,10 +98,17 @@ fi
 export XDG_CONFIG_HOME=~/.config
 
 
-# zcompile for faster zshell launch
-if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
-  zcompile ~/.zshrc
+# zcompile for faster zsh launch.
+# Compile *this* file (the tracked repo .zshrc), not ~/.zshrc — the latter is
+# now just a stub that sources us. ${(%):-%N} resolves to the sourced file's
+# path (must be read at file scope, not inside a function where %N is the
+# function name), so this works whether reached via the stub or directly.
+# zsh's `source` auto-uses <file>.zwc when it's newer.
+_zshrc_self=${(%):-%N}
+if [[ ! -e ${_zshrc_self}.zwc || ${_zshrc_self} -nt ${_zshrc_self}.zwc ]]; then
+  zcompile ${_zshrc_self}
 fi
+unset _zshrc_self
 
 ### Command history configuration (overwrite a part of prezto:history module settings)
 HISTFILE=~/.zsh_history
