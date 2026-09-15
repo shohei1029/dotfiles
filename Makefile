@@ -1,7 +1,11 @@
 DOTPATH    := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 BRANCH     := $(shell git -C $(DOTPATH) rev-parse --abbrev-ref HEAD)
 CANDIDATES := $(wildcard .??*) bin
-EXCLUSIONS := .DS_Store .git .gitmodules .gitignore .travis.yml .config .ssh .env .env.example
+# STUBS are deployed as small real files in $HOME (not symlinks) that source the
+# repo config — so tools appending to ~/.zshrc / ~/.bashrc can't dirty the
+# tracked repo file. Machine-local settings still go in ~/.zshrc.local etc.
+STUBS      := .zshrc .bashrc
+EXCLUSIONS := .DS_Store .git .gitmodules .gitignore .travis.yml .config .ssh .env .env.example $(STUBS)
 DOTFILES   := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
 
 .DEFAULT_GOAL := help
@@ -28,6 +32,14 @@ deploy: ## Create symlink to home directory
 		esac; \
 	fi
 	@$(foreach val, $(DOTFILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
+	@$(foreach val, $(STUBS), \
+		if [ -L "$(HOME)/$(val)" ]; then rm -f "$(HOME)/$(val)"; fi; \
+		if [ ! -e "$(HOME)/$(val)" ]; then \
+			printf '# Auto-generated stub. Source the tracked dotfile; keep\n# machine-local settings and tool-appended lines below (or in ~/$(val).local).\nsource "%s"\n' "$(abspath $(val))" > "$(HOME)/$(val)"; \
+			echo "generated stub $(HOME)/$(val)"; \
+		else \
+			echo "kept existing $(HOME)/$(val) (not a symlink)"; \
+		fi;)
 	ln -sfnv $(abspath .config/nvim) ~/.config/
 	ln -sfnv $(abspath .config/git) ~/.config/
 	ln -sfnv $(abspath .config/btop) ~/.config/
@@ -63,6 +75,11 @@ install: update deploy init ## Run make update, deploy, init (init installs brew
 clean: ## Remove the dot files
 	@echo 'Remove dot files in your home directory...'
 	@-$(foreach val, $(DOTFILES), rm -vrf $(HOME)/$(val);)
+	@# Only remove stubs we generated (leave hand-edited real files alone).
+	@-$(foreach val, $(STUBS), \
+		if [ -L "$(HOME)/$(val)" ] || grep -q '^# Auto-generated stub\.' "$(HOME)/$(val)" 2>/dev/null; then \
+			rm -vf "$(HOME)/$(val)"; \
+		fi;)
 
 help: ## Self-documented Makefile
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \

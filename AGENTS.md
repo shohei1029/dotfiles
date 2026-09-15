@@ -33,6 +33,17 @@ the repo was just fetched and `init` installs brew itself.
 (globbing the whole `.config` dir didn't work reliably). Editing a file here is
 editing the live config — no copy step.
 
+**`.zshrc` / `.bashrc` deploy as stubs, not symlinks (`STUBS` var).** Because
+tools routinely append (`>> ~/.zshrc`) machine-specific paths, symlinking those
+two would let the appends flow through the link and dirty the tracked repo file.
+Instead `deploy` writes a small real file in `$HOME` that just
+`source`s the repo copy; tool appends land there (repo stays clean).
+The stub is generated only when missing — an existing non-symlink file (with
+tool appends) is left untouched on re-deploy; a leftover symlink is replaced.
+`make clean` removes only stubs it recognizes (symlink or the
+`# Auto-generated stub.` header), never a hand-edited real file. Machine-local
+settings still belong in `~/.zshrc.local` / `~/.bashrc.local`.
+
 **OS detection lives in `.zshrc`, not in the deploy step.** `.zshrc` is the
 shared config. At the bottom it runs `uname -s` (and greps `/proc/version` for
 `microsoft|wsl`) to pick `_os` ∈ {mac, wsl, linux}, then sources
