@@ -86,7 +86,9 @@ zstyle ':prezto:module:prompt' pwd-length 'long' #do not abbreviate working dire
 # ~/bin: dotfiles 同梱スクリプト。全プラットフォーム共通で通す。
 path=(~/.local/bin(N-/) ~/bin(N-/) ~/opt/bin(N-/) $path)
 #path=($path ~/opt/bin(N-/))
-manpath=(~/opt/share/man(N-/) $manpath)
+# 末尾の空要素は MANPATH に trailing colon を残し、man のデフォルト検索パスを
+# 維持するため (元の MANPATH が空でも system default が効く)。
+manpath=(~/opt/share/man(N-/) $manpath '')
 
 if (( ${+commands[nvim]} )); then
     export EDITOR="nvim"
@@ -192,9 +194,6 @@ esac
 unset _os
 
 # load machine-local (untracked) overrides last
+# (tool-appended settings like devbar/aisuite live here — keep them out of the
+#  tracked repo file so this .zshrc stays clean)
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
-
-#Created by S.N.
-# devbar-managed-start
-export NODE_EXTRA_CA_CERTS="$HOME/.devbar/certs/corporate-ca-bundle.pem"
-# devbar-managed-end

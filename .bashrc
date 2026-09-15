@@ -135,6 +135,32 @@ if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
+# Homebrew / Linuxbrew
+# .zshrc と対称。brew shellenv が Homebrew を PATH 先頭に prepend する。
+for _brew in /opt/homebrew/bin/brew /usr/local/bin/brew \
+             /home/linuxbrew/.linuxbrew/bin/brew "$HOME/.linuxbrew/bin/brew"; do
+    if [ -x "$_brew" ]; then
+        eval "$("$_brew" shellenv)"
+        break
+    fi
+done
+unset _brew
+
+# path
+# ~/.local/bin: claude などユーザーローカルにインストールされるツール置き場。
+# ~/bin: dotfiles 同梱スクリプト。全プラットフォーム共通で通す。
+# 既に含まれていれば重複追加しない。先頭 prepend なので、優先度の低い順に回して
+# 最終的な並びを .zshrc の path=(~/.local/bin ~/bin ~/opt/bin ...) と一致させる。
+for _dir in "$HOME/opt/bin" "$HOME/bin" "$HOME/.local/bin"; do
+    if [ -d "$_dir" ]; then
+        case ":$PATH:" in
+            *":$_dir:"*) ;;
+            *) PATH="$_dir:$PATH" ;;
+        esac
+    fi
+done
+unset _dir
+
 # Source local settings
 if [ -f ~/.bashrc.local ]; then
     . ~/.bashrc.local
