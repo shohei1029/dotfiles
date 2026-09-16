@@ -33,6 +33,17 @@ the repo was just fetched and `init` installs brew itself.
 (globbing the whole `.config` dir didn't work reliably). Editing a file here is
 editing the live config — no copy step.
 
+**Neovim config is Lua + lazy.nvim.** Entry point is `.config/nvim/init.lua`,
+which loads `lua/config/{options,keymaps,lazy}.lua`; `lazy.lua` bootstraps
+lazy.nvim into `stdpath("data")/lazy` (outside the repo, so plugin sources never
+dirty the tree — unlike the old dein setup, which cloned into the repo) and
+auto-imports every spec under `lua/plugins/`. Add a plugin by dropping a new
+`lua/plugins/<name>.lua` returning a spec table; don't hand-edit a lockfile.
+Language tooling is LSP-based: mason installs servers, `nvim-lspconfig` wires
+them, `conform.nvim` formats and `nvim-lint` lints (replacing the old
+deoplete/ale stack). nvim-treesitter is pinned to the `master` branch (the
+`main` branch drops the `nvim-treesitter.configs` API this config uses).
+
 **`.zshrc` / `.bashrc` deploy as stubs, not symlinks (`STUBS` var).** Because
 tools routinely append (`>> ~/.zshrc`) machine-specific paths, symlinking those
 two would let the appends flow through the link and dirty the tracked repo file.

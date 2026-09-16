@@ -16,8 +16,3 @@
 
 # zcompile output (regenerated on shell startup)
 .zshrc.zwc
-
-.config/nvim/dein/.cache
-.config/nvim/dein/cache_nvim
-.config/nvim/dein/repos
-.config/nvim/dein/state_nvim.vim
