@@ -131,29 +131,29 @@ setopt HIST_SAVE_NO_DUPS         # Do not write a duplicate event to the history
 setopt HIST_VERIFY               # Do not execute immediately upon history expansion.
 setopt HIST_BEEP                 # Beep when accessing non-existent history.
 
-# history search with peco
-peco-select-history() {
-    BUFFER=$(history 1 | sort -k1,1nr | perl -ne 'BEGIN { my @lines = (); } s/^\s*\d+\*?\s*//; $in=$_; if (!(grep {$in eq $_} @lines)) { push(@lines, $in); print $in; }' | peco --query "$LBUFFER")
+# history search with fzf (^r). Dedup, keep most-recent order.
+# fzf のデフォルトでは ^k が「選択を上へ」なので、emacs 流のクエリ編集に再割り当てする
+# (^a: 行頭へ / ^k: カーソル以降を削除)。
+fzf-select-history() {
+    BUFFER=$(fc -rl 1 | awk '!seen[$0]++' | sed 's/^\s*[0-9]*\**\s*//' \
+        | fzf --query "$LBUFFER" +s --bind 'ctrl-a:beginning-of-line,ctrl-k:kill-line')
     CURSOR=${#BUFFER}
     zle reset-prompt
 }
-zle -N peco-select-history
-bindkey '^r' peco-select-history
+zle -N fzf-select-history
+bindkey '^r' fzf-select-history
 
 #history-substring-search-
 bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
 
-#anyframe
-alias af=anyframe-widget-select-widget
-
-#enhancd
-ENHANCD_DISABLE_HOME=1
-ENHANCD_FILTER=fzy:fzf:peco
-ENHANCD_HOOK_AFTER_CD='ls -GFl'
+# zoxide — smarter `cd` (replaces enhancd). Overrides the `cd` command.
+if (( ${+commands[zoxide]} )); then
+    eval "$(zoxide init zsh --cmd cd)"
+fi
 
 #emoji-cli
-EMOJI_CLI_FILTER=fzy:fzf:peco
+EMOJI_CLI_FILTER=fzf
 
 # homebrew
 export HOMEBREW_NO_AUTO_UPDATE=1

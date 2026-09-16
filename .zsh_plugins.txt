@@ -19,8 +19,6 @@ shohei1029/xiang kind:fpath path:functions
 
 # completions / utilities
 felixr/docker-zsh-completion
-mollifier/anyframe
-b4b4r07/enhancd path:init.sh
 b4b4r07/emoji-cli
 
 # Load last. syntax-highlighting must come before history-substring-search.

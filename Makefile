@@ -20,7 +20,6 @@ list: ## Show dot files in this repo
 	@$(foreach val, $(DOTFILES), /bin/ls -dF $(val);)
 
 deploy: ## Create symlink to home directory
-	@set -e
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@echo ''
 	@mkdir -p $(HOME)/.config
@@ -31,8 +30,8 @@ deploy: ## Create symlink to home directory
 			* ) echo "Skipping ~/.config/nvim";; \
 		esac; \
 	fi
-	@$(foreach val, $(DOTFILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
-	@$(foreach val, $(STUBS), \
+	@set -e; $(foreach val, $(DOTFILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
+	@set -e; $(foreach val, $(STUBS), \
 		if [ -L "$(HOME)/$(val)" ]; then rm -f "$(HOME)/$(val)"; fi; \
 		if [ ! -e "$(HOME)/$(val)" ]; then \
 			printf '# Auto-generated stub. Source the tracked dotfile; keep\n# machine-local settings and tool-appended lines below (or in ~/$(val).local).\nsource "%s"\n' "$(abspath $(val))" > "$(HOME)/$(val)"; \
@@ -50,7 +49,6 @@ deploy: ## Create symlink to home directory
 
 #vim, bash, zsh, tmux and bin dir (hard coding)
 min_deploy: ## deploy: of minimized setting files in 'min_sets' dir (by S.N.)
-	@set -e
 	@mkdir -p $(HOME)/.config
 	ln -sfnv $(abspath ./min_sets/.vimrc) ~/.vimrc
 	ln -sfnv $(abspath ./min_sets/.zshrc) ~/.zshrc
@@ -76,7 +74,7 @@ clean: ## Remove the dot files
 	@echo 'Remove dot files in your home directory...'
 	@-$(foreach val, $(DOTFILES), rm -vrf $(HOME)/$(val);)
 	@# Only remove stubs we generated (leave hand-edited real files alone).
-	@-$(foreach val, $(STUBS), \
+	@$(foreach val, $(STUBS), \
 		if [ -L "$(HOME)/$(val)" ] || grep -q '^# Auto-generated stub\.' "$(HOME)/$(val)" 2>/dev/null; then \
 			rm -vf "$(HOME)/$(val)"; \
 		fi;)
