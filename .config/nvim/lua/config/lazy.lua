@@ -24,6 +24,9 @@ require("lazy").setup({
   spec = {
     { import = "plugins" },
   },
+  -- luarocks を必要とするプラグインは無いので rocks サポートごと無効化
+  -- （:checkhealth の luarocks/hererocks 警告を抑止）
+  rocks = { enabled = false },
   install = { colorscheme = { "tokyonight" } },
   checker = { enabled = false },
   change_detection = { notify = false },

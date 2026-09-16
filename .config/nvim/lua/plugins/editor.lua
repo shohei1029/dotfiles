@@ -6,8 +6,4 @@ return {
     event = "InsertEnter",
     opts = {},
   },
-  -- 自作プラグイン（バイオインフォ系）はそのまま維持
-  {
-    "shohei1029/bio.nvim",
-  },
 }

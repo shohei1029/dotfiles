@@ -30,4 +30,9 @@ opt.termguicolors = true  -- 24bit カラーを有効化
 opt.background = "dark"
 opt.signcolumn = "yes"    -- サインカラム（診断表示）を常に表示
 
--- Python プロバイダは指定しない（PATH 上の python3 を自動検出させる）
+-- リモートプラグイン用の言語プロバイダは使わないので無効化する
+-- （:checkhealth の "provider not found" 系の警告を抑止）
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
