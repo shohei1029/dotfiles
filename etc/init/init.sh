@@ -39,7 +39,7 @@ fi
 # neovim from the Brewfile).
 if [ "$(uname)" = "Linux" ] && ! command -v nvim >/dev/null 2>&1; then
     echo "installing neovim..."
-    curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
+    curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
     chmod u+x nvim.appimage
     mkdir -p ~/opt/bin
     mv nvim.appimage ~/opt/bin/nvim
@@ -47,15 +47,8 @@ fi
 
 mkdir -p ~/.config
 
-# anyenv — manages pyenv/nodenv/etc.
-if ! command -v anyenv >/dev/null 2>&1 && [ ! -d "$HOME/.anyenv" ]; then
-    echo "installing anyenv..."
-    git clone https://github.com/anyenv/anyenv ~/.anyenv
-    export PATH="$HOME/.anyenv/bin:$PATH"
-    anyenv install --force-init
-    mkdir -p "$(anyenv root)/plugins"
-    git clone https://github.com/znz/anyenv-update.git "$(anyenv root)/plugins/anyenv-update"
-fi
+# 言語ランタイム (Node / Python) と uv は Brewfile で導入する。
+# バージョン固定が要る場合は uv (Python) / プロジェクト単位のツールで管理する。
 
 # tmux plugin manager
 [ -d ~/.tmux/plugins/tpm ] || git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm

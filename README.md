@@ -19,7 +19,7 @@ $ make install   # = update + deploy + init
 | --- | --- |
 | `make deploy` | dotfilesを`$HOME`にシンボリックリンク (`.zshrc`/`.bashrc`はスタブ生成) |
 | `make brew` | `Brewfile`のパッケージを導入 (brew導入済みの環境向け) |
-| `make init` | 環境セットアップ (Homebrew導入 + brew bundle + anyenv/tmux) |
+| `make init` | 環境セットアップ (Homebrew導入 + brew bundle + tmux tpm) |
 | `make install` | update→deploy→initを一括実行 |
 | `make min_deploy` | `min_sets/`の軽量設定のみ配置 (サーバ等向け) |
 | `make help` | 全ターゲット一覧 |
