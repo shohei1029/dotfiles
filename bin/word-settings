@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+# word-settings — Microsoft Word for Mac の設定をこの dotfiles で管理するための
+# エクスポート / インポートツール (macOS 専用)。
+#
+# なぜ symlink ではなくこの方式か:
+#   - plist は cfprefsd がキャッシュするため、symlink 先を書き換えても反映されず
+#     Word 終了時にキャッシュで上書きされる。symlink は事実上機能しない。
+#   - Normal.dotm は Word が起動中に頻繁に書き換え/再生成するため、symlink だと
+#     リンクごと壊れ、リポジトリも汚れる。
+# よって「必要なときだけ手動で取り込む/書き戻す」方式にしている。
+#
+# 管理対象:
+#   - Normal.dotm  … キーバインド(ショートカット)・スタイル・マクロ・定型句の本体
+#   - com.microsoft.Word の設定のうち、移植価値のあるキーだけ (allowlist)
+#     ※ ウィンドウ位置・最近開いたファイル等のマシン固有値は意図的に除外
+#
+# 使い方:
+#   word-settings export   現在の Word 設定を dotfiles リポジトリに取り込む
+#   word-settings import    リポジトリの設定を現在のマシンに書き戻す
+#   word-settings diff       リポジトリと現在のマシンの差分を表示
+set -euo pipefail
+
+# --- パス定義 -------------------------------------------------------------
+DOTPATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_DIR="$DOTPATH/word"
+REPO_DOTM="$REPO_DIR/Normal.dotm"
+REPO_PLIST="$REPO_DIR/com.microsoft.Word.plist"
+
+LIVE_DOTM="$HOME/Library/Group Containers/UBF8T346G9.Office/User Content.localized/Templates.localized/Normal.dotm"
+WORD_DOMAIN="com.microsoft.Word"
+
+# plist から移植する価値のあるキーだけを列挙 (これ以外は個人マシン固有のゴミ)。
+# 必要に応じてここに追記する。
+PLIST_KEYS=(
+	AutoSaveDefaultToLocal        # 自動保存の既定
+	NSAutoFillHeuristicControllerEnabled
+	kOUIRibbonDefaultCollapse     # リボンの折りたたみ既定
+)
+
+# --- 共通ユーティリティ ---------------------------------------------------
+die()  { printf 'error: %s\n' "$*" >&2; exit 1; }
+info() { printf '==> %s\n' "$*"; }
+
+require_macos() {
+	[ "$(uname -s)" = "Darwin" ] || die "このツールは macOS 専用です (Word for Mac)。"
+}
+
+warn_if_word_running() {
+	if pgrep -x "Microsoft Word" >/dev/null 2>&1; then
+		printf 'Word が起動中です。設定はアプリ終了時に上書きされる可能性があります。\n' >&2
+		read -r -p "Word を終了してから続行してください。続けますか? (y/N): " yn
+		case "$yn" in [Yy]*) ;; *) die "中断しました。" ;; esac
+	fi
+}
+
+# --- サブコマンド ---------------------------------------------------------
+cmd_export() {
+	require_macos
+	warn_if_word_running
+	mkdir -p "$REPO_DIR"
+
+	[ -f "$LIVE_DOTM" ] || die "Normal.dotm が見つかりません: $LIVE_DOTM"
+	cp -v "$LIVE_DOTM" "$REPO_DOTM"
+
+	# 対象キーだけを抜き出して plist を組み立てる。
+	# 空の dict から作り、PlistBuddy で 1 キーずつ追加する
+	# (手書き XML を plutil に食わせると壊れるため PlistBuddy を使う)。
+	rm -f "$REPO_PLIST"
+	/usr/libexec/PlistBuddy -c "Add :dummy string x" -c "Delete :dummy" "$REPO_PLIST" >/dev/null 2>&1
+	local k v
+	for k in "${PLIST_KEYS[@]}"; do
+		if v="$(defaults read "$WORD_DOMAIN" "$k" 2>/dev/null)"; then
+			/usr/libexec/PlistBuddy -c "Add :$k string $v" "$REPO_PLIST" >/dev/null
+			info "取り込み: $k = $v"
+		fi
+	done
+
+	info "取り込み完了: $REPO_DIR"
+	info "git status で差分を確認し、必要ならコミットしてください。"
+}
+
+cmd_import() {
+	require_macos
+	warn_if_word_running
+
+	[ -f "$REPO_DOTM" ] || die "リポジトリに Normal.dotm がありません。先に export してください。"
+	mkdir -p "$(dirname "$LIVE_DOTM")"
+	# 既存 Normal.dotm はバックアップしてから上書き。
+	if [ -f "$LIVE_DOTM" ]; then
+		cp "$LIVE_DOTM" "$LIVE_DOTM.bak.$(date +%Y%m%d%H%M%S)"
+		info "既存の Normal.dotm を .bak.* にバックアップしました。"
+	fi
+	cp -v "$REPO_DOTM" "$LIVE_DOTM"
+
+	# allowlist のキーだけ書き戻す (他の個人設定は触らない)。
+	if [ -f "$REPO_PLIST" ]; then
+		local k v
+		for k in "${PLIST_KEYS[@]}"; do
+			if v="$(/usr/libexec/PlistBuddy -c "Print :$k" "$REPO_PLIST" 2>/dev/null)"; then
+				defaults write "$WORD_DOMAIN" "$k" "$v"
+				info "書き戻し: $k = $v"
+			fi
+		done
+		# cfprefsd のキャッシュを反映させる。
+		defaults read "$WORD_DOMAIN" >/dev/null 2>&1 || true
+	fi
+
+	info "書き戻し完了。Word を起動して確認してください。"
+}
+
+cmd_diff() {
+	require_macos
+	if [ -f "$REPO_DOTM" ] && [ -f "$LIVE_DOTM" ]; then
+		if cmp -s "$REPO_DOTM" "$LIVE_DOTM"; then
+			info "Normal.dotm: リポジトリと一致"
+		else
+			info "Normal.dotm: 差分あり (リポジトリ $(stat -f%z "$REPO_DOTM") bytes / 現在 $(stat -f%z "$LIVE_DOTM") bytes)"
+		fi
+	else
+		info "Normal.dotm: 片方が存在しません"
+	fi
+}
+
+# --- エントリポイント -----------------------------------------------------
+case "${1:-}" in
+	export) cmd_export ;;
+	import) cmd_import ;;
+	diff)   cmd_diff ;;
+	*)
+		cat >&2 <<'USAGE'
+usage: word-settings <command>
+
+  export   現在の Word 設定 (Normal.dotm + 主要 plist キー) を dotfiles に取り込む
+  import   dotfiles の設定を現在のマシンに書き戻す (既存 Normal.dotm はバックアップ)
+  diff     リポジトリと現在のマシンの差分を表示
+
+対象は macOS の Microsoft Word。キーバインド(ショートカット)は Normal.dotm に
+含まれます。詳細は word/README.md を参照。
+USAGE
+		exit 1
+		;;
+esac

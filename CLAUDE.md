@@ -87,6 +87,14 @@ check).
   servers where the full setup is overkill — keep them dependency-free.
 - **`bin/`** is symlinked onto `PATH`. Most files are vendored iTerm2
   utilities (`it2*`, `imgcat`); custom scripts are macOS-specific app wrappers.
+- **`word/`** holds Microsoft Word for Mac settings (macOS-only), managed by
+  export/import — NOT symlink — via `bin/word-settings`. Word's plist is
+  `cfprefsd`-cached and `Normal.dotm` is rewritten while Word runs, so a symlink
+  would be overwritten or corrupted. `Normal.dotm` carries the keybindings
+  (shortcuts), styles, macros, and AutoText; only allowlisted plist keys
+  (`PLIST_KEYS` in the script) are captured — window positions / recent files
+  are intentionally excluded. `make deploy` never touches it. See
+  `word/README.md`.
 - Comments throughout are a mix of Japanese and English; match the surrounding
   file when editing.
 
