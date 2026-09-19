@@ -135,7 +135,7 @@ setopt HIST_BEEP                 # Beep when accessing non-existent history.
 # fzf のデフォルトでは ^k が「選択を上へ」なので、emacs 流のクエリ編集に再割り当てする
 # (^a: 行頭へ / ^k: カーソル以降を削除)。
 fzf-select-history() {
-    BUFFER=$(fc -rl 1 | awk '!seen[$0]++' | sed 's/^\s*[0-9]*\**\s*//' \
+    BUFFER=$(fc -rl 1 | sed -E 's/^[[:space:]]*[0-9]+\*?[[:space:]]*//' | awk '!seen[$0]++' \
         | fzf --query "$LBUFFER" +s --bind 'ctrl-a:beginning-of-line,ctrl-k:kill-line')
     CURSOR=${#BUFFER}
     zle reset-prompt
