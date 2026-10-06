@@ -15,7 +15,8 @@ runtime, not by maintaining separate trees.
 | `make deploy` | Symlink dotfiles into `$HOME` (the core operation) |
 | `make init` | Install Homebrew, run `brew bundle`, set up tmux tpm |
 | `make brew` | Run `brew bundle --file=Brewfile` only |
-| `make install` | `update` → `deploy` → `init`, then re-exec the shell |
+| `make install` | `update` → `preflight` → `deploy` → `init`, then exec zsh |
+| `make preflight` | Show how many interactive prompts (y/n, sudo password) are coming |
 | `make update` | `git pull origin <current-branch>` |
 | `make min_deploy` | Deploy only the lightweight `min_sets/` configs (for servers) |
 | `make help` | List all targets (default goal) |
@@ -50,7 +51,9 @@ two would let the appends flow through the link and dirty the tracked repo file.
 Instead `deploy` writes a small real file in `$HOME` that just
 `source`s the repo copy; tool appends land there (repo stays clean).
 The stub is generated only when missing — an existing non-symlink file (with
-tool appends) is left untouched on re-deploy; a leftover symlink is replaced.
+tool appends) is kept, and only gets a `source` line appended if it lacks one
+(e.g. a pre-existing `~/.zshrc` or Ubuntu's skel `~/.bashrc`); a leftover
+symlink is replaced.
 `make clean` removes only stubs it recognizes (symlink or the
 `# Auto-generated stub.` header), never a hand-edited real file. Machine-local
 settings still belong in `~/.zshrc.local` / `~/.bashrc.local`.
@@ -75,10 +78,18 @@ dependencies (`helper` first). Prompt is prezto's `seraph` theme from
 
 **`init.sh` is the environment installer.** The official Homebrew installer
 covers both macOS and Linux, so a single path installs Homebrew (Linux/WSL also
-installs zsh first as a login-shell candidate), runs `brew shellenv`, then
-`brew bundle` — the same `Brewfile` works everywhere. Finally it clones tmux's
+installs zsh first and `chsh`es to it, since the default login shell is bash),
+runs `brew shellenv`, then `brew bundle` — the same `Brewfile` works everywhere. Finally it clones tmux's
 tpm. Keep it idempotent (`set -e`, guard every install with a `command -v`
 check).
+
+**All user input happens up front.** `preflight.sh` prints how many prompts are
+coming; `init.sh` asks for the sudo password once (`sudo -v`, kept alive in the
+background), runs the Homebrew installer with `NONINTERACTIVE=1`, and prints a
+✅ "safe to walk away" line before the long unattended part. The prompt
+conditions live in `etc/init/prompts.sh`, shared by preflight, `init.sh` and
+`deploy` — when adding a new interactive step, add its check there so the count
+stays accurate.
 
 ## Conventions
 

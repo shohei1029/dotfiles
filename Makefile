@@ -23,7 +23,8 @@ deploy: ## Create symlink to home directory
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@echo ''
 	@mkdir -p $(HOME)/.config
-	@if [ -e "$(HOME)/.config/nvim" ]; then \
+	@DOTPATH=$(DOTPATH); . $(DOTPATH)/etc/init/prompts.sh; \
+	if needs_nvim_prompt; then \
 		read -p "Overwrite existing ~/.config/nvim? (y/n): " yn; \
 		case $$yn in \
 			[Yy]* ) rm -rf $(HOME)/.config/nvim;; \
@@ -36,6 +37,9 @@ deploy: ## Create symlink to home directory
 		if [ ! -e "$(HOME)/$(val)" ]; then \
 			printf '# Auto-generated stub. Source the tracked dotfile; keep\n# machine-local settings and tool-appended lines below (or in ~/$(val).local).\nsource "%s"\n' "$(abspath $(val))" > "$(HOME)/$(val)"; \
 			echo "generated stub $(HOME)/$(val)"; \
+		elif ! grep -qF 'source "$(abspath $(val))"' "$(HOME)/$(val)"; then \
+			printf '\n# Added by dotfiles deploy.\nsource "%s"\n' "$(abspath $(val))" >> "$(HOME)/$(val)"; \
+			echo "appended source line to existing $(HOME)/$(val)"; \
 		else \
 			echo "kept existing $(HOME)/$(val) (not a symlink)"; \
 		fi;)
@@ -58,8 +62,12 @@ min_deploy: ## deploy: of minimized setting files in 'min_sets' dir (by S.N.)
 	ln -snv $(abspath bin) ~/bin
 #@$(foreach val, $(filter-out $(EXCLUSIONS), $(wildcard ./min_sets/.??*)), ln -sfnv $(abspath $(val)) $(HOME)/$(val);) #うまくいかない
 
+# 対話的な確認の件数を最初に表示する (終わると init が ✅ を表示)。
+preflight: ## Show how many interactive prompts deploy/init will ask
+	@DOTPATH=$(DOTPATH) bash $(DOTPATH)/etc/init/preflight.sh deploy init
+
 init: ## Setup environment settings
-	@DOTPATH=$(DOTPATH) bash $(DOTPATH)/etc/init/init.sh
+	@DOTPATH=$(DOTPATH) DOTFILES_PREFLIGHT_DONE=$(if $(filter preflight install,$(MAKECMDGOALS)),1) bash $(DOTPATH)/etc/init/init.sh
 
 brew: ## Install packages from Brewfile
 	brew bundle --file=$(DOTPATH)/Brewfile
@@ -67,8 +75,9 @@ brew: ## Install packages from Brewfile
 update: ## Fetch changes for this repo
 	git -C $(DOTPATH) pull origin $(BRANCH)
 
-install: update deploy init ## Run make update, deploy, init (init installs brew + runs brew bundle)
-	@exec $$SHELL
+install: update preflight deploy init ## Run make update, deploy, init (init installs brew + runs brew bundle)
+	@# $$SHELL はまだ変更前のログインシェル (WSL/Linux では bash) なので zsh を優先する。
+	@exec "$$(command -v zsh || echo "$$SHELL")"
 
 clean: ## Remove the dot files
 	@echo 'Remove dot files in your home directory...'

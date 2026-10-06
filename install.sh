@@ -46,10 +46,11 @@ if ! command -v make >/dev/null 2>&1; then
 fi
 
 # --- deploy + init env -----------------------------------------------------
+# `preflight` shows how many prompts to expect up front.
 # Run targets directly (skip `make update`, which would `git pull` a repo we
 # may have just cloned/downloaded). `init` installs Homebrew and runs
 # `brew bundle` itself, so `make brew` is not needed (and would fail here
 # since brew isn't installed yet on a fresh machine).
-make deploy init
+make preflight deploy init
 
 echo "==> Done. Restart your shell or run: exec \$SHELL"
